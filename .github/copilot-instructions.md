@@ -90,6 +90,9 @@ to satisfy a checklist.
 - Peripheral additions require register/transaction tests plus actual compiled
   firmware coverage. UI changes require browser checks and desktop/mobile
   screenshots; a build alone does not demonstrate a working visualization.
+  When a browser is available, link the screenshots from the PR, not embedded
+  images; see the pre-PR skill. Without one, still open the PR and say in its
+  body that screenshots are missing and why.
 - Document verified fidelity and limitations. Do not claim real hardware,
   container execution, full-suite success, or ten-minute streaming evidence that was
   not obtained on the relevant revision.

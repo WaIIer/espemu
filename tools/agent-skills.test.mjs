@@ -315,3 +315,70 @@ test('PR queue reference is valid JSON with consistent dependencies and conserva
   assert.equal(queue.authorization.deleteBranches, false);
   assert.equal(queue.authorization.mergeRemotePrs, false);
 });
+
+// Runs the PR screenshot helper against a fake gh that records calls and the JSON it is sent.
+function screenshotHelper(args, env = {}) {
+  const directory = mkdtempSync(join(tmpdir(), 'espemu-screenshots-'));
+  const bin = join(directory, 'bin'), log = join(directory, 'calls'), inputs = join(directory, 'inputs');
+  mkdirSync(bin); mkdirSync(inputs);
+  writeFileSync(join(directory, 'desktop.png'), Buffer.from([0x89, 0x50, 0x4e, 0x47, 1, 2, 3]));
+  writeFileSync(join(directory, 'notes.txt'), 'not an image');
+  writeFileSync(join(bin, 'gh'), `#!/usr/bin/env bash
+printf '%s\\n' "$*" >> ${JSON.stringify(log)}
+for ((i = 1; i <= $#; i++)); do
+  next=$((i + 1))
+  if [[ \${!i} == --input || \${!i} == --body-file ]]; then cp -- "\${!next}" ${JSON.stringify(inputs)}/$(ls ${JSON.stringify(inputs)} | wc -l); fi
+done
+case "$*" in
+  "pr view"*) printf 'abcdef0123456789abcdef0123456789abcdef01\\n' ;;
+  "api repos/o/r/git/ref/heads/pr-screenshots") [[ -n \${BRANCH_EXISTS:-} ]] || { printf '{"message":"Not Found"}\\n'; exit 1; } ;;
+  "api repos/o/r/git/blobs"*) printf 'blob1\\n' ;;
+  "api repos/o/r/git/trees"*) printf 'tree1\\n' ;;
+  "api repos/o/r/git/commits"*) printf 'commit1\\n' ;;
+  "api repos/o/r/contents/"*"?ref=pr-screenshots"*) [[ -n \${FILE_EXISTS:-} ]] && printf 'old1\\n' || { printf '{"message":"Not Found"}\\n'; exit 1; } ;;
+esac
+`, { mode: 0o755 });
+  const result = spawnSync('bash', [join(skillsDirectory, 'espemu-pre-pr/scripts/pr-screenshots.sh'), ...args.map(value => value.replace('{dir}', directory))], {
+    encoding: 'utf8', env: { ...process.env, PATH: `${bin}:${process.env.PATH}`, ...env } });
+  const calls = existsSync(log) ? readFileSync(log, 'utf8').trim().split('\n') : [];
+  const sent = readdirSync(inputs).sort((left, right) => left - right).map(name => readFileSync(join(inputs, name), 'utf8'));
+  rmSync(directory, { recursive: true, force: true });
+  return { ...result, calls, sent };
+}
+
+test('PR screenshot helper validates images and its dry run never contacts GitHub', () => {
+  const dry = screenshotHelper(['--repo', 'o/r', '--pr', '7', '--sha', 'abcdef0123456789', '--dry-run', '{dir}/desktop.png=Creator, desktop']);
+  assert.equal(dry.status, 0, dry.stderr);
+  assert.deepEqual(dry.calls, []);
+  assert.equal(dry.stdout, '### Screenshots for abcdef012345\n\n- [Creator, desktop](https://github.com/o/r/blob/pr-screenshots/pr-7/abcdef012345/01-desktop.png)\n');
+  for (const args of [
+    ['--repo', 'o/r', '--pr', '7', '--sha', 'abcdef0', '--dry-run', '{dir}/notes.txt'],
+    ['--repo', 'o/r', '--pr', '7', '--sha', 'abcdef0', '--dry-run', '{dir}/missing.png'],
+    ['--repo', 'not a repo', '--pr', '7', '--sha', 'abcdef0', '{dir}/desktop.png'],
+    ['--repo', 'o/r', '--pr', '0', '--sha', 'abcdef0', '{dir}/desktop.png'],
+    ['--repo', 'o/r', '--pr', '7', '--dry-run', '{dir}/desktop.png'],
+  ]) {
+    const result = screenshotHelper(args);
+    assert.equal(result.status, 2, args.join(' '));
+    assert.deepEqual(result.calls, [], 'invalid input is rejected before any GitHub call');
+  }
+});
+
+test('PR screenshot helper stores images on the screenshot branch and comments them on the PR head', () => {
+  const fresh = screenshotHelper(['--repo', 'o/r', '--pr', '7', '{dir}/desktop.png=Creator, desktop']);
+  assert.equal(fresh.status, 0, fresh.stderr);
+  assert.match(fresh.calls[0], /^pr view 7 --repo o\/r --json headRefOid/);
+  assert.ok(fresh.calls.some(call => call.startsWith('api repos/o/r/git/refs -f ref=refs/heads/pr-screenshots -f sha=commit1')), 'a missing branch is created as an orphan commit');
+  const upload = fresh.calls.findIndex(call => call.startsWith('api -X PUT repos/o/r/contents/pr-7/abcdef012345/01-desktop.png'));
+  assert.ok(upload > 0);
+  const body = JSON.parse(fresh.sent.find(text => text.includes('"content"')));
+  assert.deepEqual(body, { message: 'Screenshot for PR #7', branch: 'pr-screenshots', content: Buffer.from([0x89, 0x50, 0x4e, 0x47, 1, 2, 3]).toString('base64') });
+  assert.match(fresh.calls.at(-1), /^pr comment 7 --repo o\/r --body-file /);
+  assert.match(fresh.sent.at(-1), /^- \[Creator, desktop\]\(https:\/\/github\.com\/o\/r\/blob\/pr-screenshots\/pr-7\/abcdef012345\/01-desktop\.png\)$/m);
+  assert.doesNotMatch(fresh.sent.at(-1), /!\[/, 'the comment links to images instead of embedding them');
+  assert.ok(!fresh.calls.some(call => /^(push|repo|pr (edit|merge|create))/.test(call)), 'only the screenshot branch and one comment are written');
+  const again = screenshotHelper(['--repo', 'o/r', '--pr', '7', '{dir}/desktop.png'], { BRANCH_EXISTS: '1', FILE_EXISTS: '1' });
+  assert.equal(again.status, 0, again.stderr);
+  assert.ok(!again.calls.some(call => call.includes('git/refs')), 'an existing branch is reused');
+  assert.equal(JSON.parse(again.sent.find(text => text.includes('"content"'))).sha, 'old1', 'a repeated upload replaces the stored image');
+});

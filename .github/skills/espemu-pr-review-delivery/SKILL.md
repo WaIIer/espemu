@@ -143,6 +143,8 @@ appear active.
 5. For PR delivery, confirm the URL, base branch, delivered head, and check
    status. Reply to actionable threads with the fix and test evidence when
    authorized. A successful push alone does not prove the correct PR was updated.
+   For a head that changes the web UI, link its screenshots or note why they are
+   missing, as in [the pre-PR UI screenshot steps](../espemu-pre-pr/SKILL.md#ui-screenshots-on-the-pr).
 6. Report what changed, how it was tested, and relevant limitations. Do not claim
    a remote check passed merely because the local equivalent passed.
 
