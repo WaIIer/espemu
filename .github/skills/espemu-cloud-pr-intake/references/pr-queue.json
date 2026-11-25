@@ -1,0 +1,34 @@
+{
+  "v": 1,
+  "repository": "OWNER/REPOSITORY",
+  "targetBranch": "main",
+  "operation": "integrate",
+  "authorization": {
+    "commitOwnedBranch": true,
+    "pushOwnedBranch": false,
+    "openIntegrationPr": false,
+    "mergeRemotePrs": false,
+    "forcePush": false,
+    "deleteBranches": false
+  },
+  "protectedPaths": [
+    "user application source directories",
+    "unrelated pre-existing workspace changes"
+  ],
+  "pullRequests": [
+    {
+      "number": 123,
+      "dependsOn": [],
+      "expectedHeadSha": null,
+      "status": "pending",
+      "acceptance": ["shared contracts and packaged SDK preserve compatibility"]
+    },
+    {
+      "number": 124,
+      "dependsOn": [123],
+      "expectedHeadSha": null,
+      "status": "pending",
+      "acceptance": ["datasheet-backed register tests and actual firmware reads"]
+    }
+  ]
+}

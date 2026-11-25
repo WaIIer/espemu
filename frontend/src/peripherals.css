@@ -1,0 +1,266 @@
+main {
+    display: flex;
+    flex-direction: column;
+}
+
+.peripheral-panel {
+    order: -1;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.peripheral-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+}
+
+.peripheral-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.peripheral-actions button,
+.peripheral-heading button {
+    width: 32px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    background: transparent;
+    border-radius: 4px;
+}
+
+.peripheral-actions button:hover,
+.peripheral-heading button:hover {
+    background: #e7eee9;
+}
+
+.peripheral-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+}
+
+.peripheral-device {
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 12px;
+    min-width: 0;
+    max-width: 420px;
+}
+
+.peripheral-heading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.peripheral-heading input {
+    border: 0;
+    background: transparent;
+    width: 100%;
+    min-width: 0;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 4px;
+}
+
+.peripheral-body {
+    height: 64px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.led-indicator {
+    width: 32px;
+    height: 32px;
+    flex: 0 0 32px;
+    border: 3px solid #b9c6be;
+    border-radius: 50%;
+}
+
+.led-on {
+    border-color: #49594f;
+}
+
+.peripheral-stale .led-indicator {
+    opacity: .45;
+}
+
+.pin-state {
+    font-family: var(--mono);
+    font-size: 12px;
+}
+
+.physical-button {
+    width: 44px;
+    height: 40px;
+    border: 1px solid #aab9af;
+    border-bottom-width: 4px;
+    background: #eff4f1;
+    border-radius: 5px;
+    display: grid;
+    place-items: center;
+    touch-action: none;
+}
+
+.physical-button:active {
+    border-bottom-width: 1px;
+    background: #d5e7df;
+}
+
+.gpio-switch {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.peripheral-wiring {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.peripheral-wiring label {
+    min-width: 0;
+    flex: 1;
+    font-size: 11px;
+    color: var(--muted);
+}
+
+.peripheral-wiring select {
+    display: block;
+    width: 100%;
+    margin-top: 4px;
+}
+
+.peripheral-settings {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+.peripheral-settings label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+}
+
+.peripheral-settings select {
+    margin-left: auto;
+    font-size: 11px;
+}
+
+.rgb-channel-states {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding-bottom: 8px;
+    font: 10px var(--mono);
+    color: var(--muted);
+}
+
+.ws2812-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(20px, 1fr));
+    gap: 5px;
+    width: 100%;
+    max-height: 62px;
+    overflow-y: auto;
+    padding: 2px;
+}
+
+.ws2812-single {
+    grid-template-columns: 38px;
+}
+
+.ws2812-pixel {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1;
+    border: 2px solid #bac8c0;
+    border-radius: 4px;
+}
+
+.peripheral-stale .ws2812-pixel {
+    opacity: .5;
+}
+
+.ws2812-length {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 11px;
+    margin-top: 8px;
+}
+
+.ws2812-length input {
+    width: 72px;
+}
+
+@media(max-width:600px) {
+    .peripheral-toolbar {
+        gap: 8px;
+    }
+
+    .peripheral-toolbar .meta {
+        width: 100%;
+        order: 2;
+    }
+
+    .peripheral-actions {
+        gap: 3px;
+    }
+
+    .peripheral-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .peripheral-device {
+        max-width: none;
+    }
+}
+.dot-matrix-display {
+    min-width: 0;
+    width: 100%;
+}
+.dot-matrix-chain {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.dot-matrix-module {
+    flex: 0 1 124px;
+    min-width: 0;
+}
+.dot-matrix-module svg {
+    display: block;
+    width: 100%;
+    max-width: 124px;
+}
+.dot-matrix-status,
+.dot-matrix-registers {
+    display: block;
+    font-size: 11px;
+    overflow-wrap: anywhere;
+}
+.dot-matrix-registers {
+    color: var(--muted);
+}
+.matrix-device .peripheral-body {
+    height: auto;
+    min-height: 64px;
+    padding: 8px 0;
+    align-items: flex-start;
+}
+.peripheral-stale .dot-matrix-module svg {
+    opacity: .45;
+}

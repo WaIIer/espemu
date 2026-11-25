@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "starter": "empty",
+  "language": "c",
+  "manifest": {
+    "v": 1,
+    "target": "esp32",
+    "buses": [{ "id": "i2c0", "type": "i2c", "controller": 0, "sda": 21, "scl": 22 }],
+    "devices": [
+      { "id": "lcd", "label": "Status display", "type": "hd44780", "bus": "i2c0", "address": 39, "size": "20x4" },
+      { "id": "speaker", "type": "max98357a", "din": 27, "bclk": 26, "lrclk": 25 }
+    ]
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "v": 1,
+  "starter": "empty",
+  "language": "c",
+  "manifest": {
+    "v": 1,
+    "target": "esp32",
+    "devices": [{ "id": "camera", "label": "Front camera", "type": "ov2640" }]
+  }
+}

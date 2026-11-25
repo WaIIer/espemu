@@ -1,0 +1,22 @@
+{
+  "v": 1,
+  "starter": "empty",
+  "language": "c",
+  "manifest": {
+    "v": 1,
+    "target": "esp32",
+    "buses": [{ "id": "i2c0", "type": "i2c", "controller": 0, "sda": 21, "scl": 22 }],
+    "devices": [
+      { "id": "climate", "type": "bme280", "bus": "i2c0", "address": 118 },
+      { "id": "light", "type": "bh1750", "bus": "i2c0", "address": 35 },
+      { "id": "alarm", "type": "led", "pin": 4, "color": "red" },
+      { "id": "night", "type": "led", "pin": 16 },
+      { "id": "sensor_fault", "type": "led", "pin": 17, "color": "amber" },
+      { "id": "acknowledge", "type": "button", "pin": 27, "activeLow": true }
+    ],
+    "inputs": {
+      "climate": { "temperatureC": 23, "humidityPct": 45, "pressurePa": 101325 },
+      "light": { "lux": 120 }
+    }
+  }
+}

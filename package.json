@@ -1,0 +1,48 @@
+{
+    "name": "espemu",
+    "version": "0.1.0",
+    "license": "MIT",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "demo": "bash tools/demo.sh",
+        "project": "bash tools/setup-project.sh",
+        "wizard": "bash tools/create-project.sh",
+        "creator": "vite --config frontend/vite.config.ts --open /create",
+        "verify": "bash tools/verify.sh",
+        "typecheck": "tsc --noEmit",
+        "build": "npm run typecheck && vite build --config frontend/vite.config.ts",
+        "start": "node --import tsx server/index.ts",
+        "test": "node --import tsx --test tests/*.test.ts",
+        "test:gate": "node --test tools/gate.test.mjs",
+    "test:ci": "node --test tools/ci.test.mjs",
+    "test:skills": "node --test tools/agent-skills.test.mjs",
+        "test:fast": "node --import tsx --test --test-concurrency=2 tools/ci.test.mjs tools/agent-skills.test.mjs tests/application.test.ts tests/gpio-protocol.test.ts tests/manifest.test.ts tests/packaging.test.ts tests/project-artifacts.test.ts tests/project-creator.test.ts tests/protocol.test.ts tests/runtime-bounds.test.ts",
+        "test:e2e": "playwright test",
+        "test:creator": "playwright test --config playwright.creator.config.ts"
+    },
+    "dependencies": {
+        "@inquirer/prompts": "7.8.4",
+        "bootstrap": "5.3.9",
+        "lucide-react": "0.511.0",
+        "react": "19.1.0",
+        "react-bootstrap": "2.10.10",
+        "react-dom": "19.1.0",
+        "recharts": "2.15.3",
+        "three": "0.180.0",
+        "tsx": "4.19.4",
+        "ws": "8.18.2",
+        "zod": "3.25.49"
+    },
+    "devDependencies": {
+        "@playwright/test": "1.52.0",
+        "@types/node": "22.15.30",
+        "@types/react": "19.1.6",
+        "@types/react-dom": "19.1.6",
+        "@types/three": "0.180.0",
+        "@types/ws": "8.18.1",
+        "@vitejs/plugin-react": "4.4.1",
+        "typescript": "5.8.3",
+        "vite": "6.3.5"
+    }
+}

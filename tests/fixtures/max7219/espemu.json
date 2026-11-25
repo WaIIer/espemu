@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "target": "esp32",
+  "devices": [
+    {"id": "single", "label": "Single matrix", "type": "max7219", "din": 23, "clk": 18, "load": 5},
+    {"id": "chain", "label": "Matrix chain", "type": "max7219", "din": 25, "clk": 32, "load": 33, "length": 2}
+  ]
+}

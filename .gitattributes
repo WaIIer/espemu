@@ -1,0 +1,2 @@
+firmware/components/bme280/vendor/* -text whitespace=cr-at-eol
+qemu/*.patch -text -whitespace

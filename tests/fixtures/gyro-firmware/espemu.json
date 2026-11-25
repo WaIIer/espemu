@@ -1,0 +1,28 @@
+{
+    "v": 1,
+    "target": "esp32",
+    "buses": [
+        {
+            "id": "motion_bus",
+            "type": "i2c",
+            "controller": 0,
+            "sda": 21,
+            "scl": 22,
+            "frequencyHz": 100000
+        }
+    ],
+    "devices": [
+        {
+            "id": "motion",
+            "type": "mpu6050",
+            "bus": "motion_bus",
+            "address": 104
+        },
+        {
+            "id": "indicator",
+            "type": "led",
+            "pin": 2,
+            "color": "green"
+        }
+    ]
+}

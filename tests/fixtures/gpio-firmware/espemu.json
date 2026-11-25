@@ -1,0 +1,40 @@
+{
+    "v": 1,
+    "target": "esp32",
+    "devices": [
+        {
+            "id": "blink",
+            "type": "led",
+            "pin": 2,
+            "label": "Blink LED"
+        },
+        {
+            "id": "button",
+            "type": "button",
+            "pin": 27,
+            "label": "Button"
+        },
+        {
+            "id": "echo",
+            "type": "led",
+            "pin": 4,
+            "label": "Button LED"
+        },
+        {
+            "id": "rgb",
+            "type": "rgb",
+            "pins": [
+                16,
+                17,
+                18
+            ],
+            "label": "RGB LED"
+        },
+        {
+            "id": "probe",
+            "type": "probe",
+            "pin": 2,
+            "label": "Probe"
+        }
+    ]
+}

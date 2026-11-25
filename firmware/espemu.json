@@ -1,0 +1,98 @@
+{
+    "v": 1,
+    "target": "esp32",
+    "buses": [
+        {
+            "id": "i2c0",
+            "type": "i2c",
+            "controller": 0,
+            "sda": 21,
+            "scl": 22,
+            "frequencyHz": 100000
+        }
+    ],
+    "devices": [
+        {
+            "id": "tmp105",
+            "type": "tmp105",
+            "bus": "i2c0",
+            "address": 72
+        },
+        {
+            "id": "bh1750",
+            "type": "bh1750",
+            "bus": "i2c0",
+            "address": 35
+        },
+        {
+            "id": "bme280",
+            "type": "bme280",
+            "bus": "i2c0",
+            "address": 118
+        },
+        {
+            "id": "mpu6050",
+            "type": "mpu6050",
+            "bus": "i2c0",
+            "address": 104
+        },
+        {
+            "id": "status_led",
+            "label": "Status LED",
+            "type": "led",
+            "pin": 2,
+            "color": "green"
+        },
+        {
+            "id": "rgb",
+            "label": "RGB LED",
+            "type": "rgb",
+            "pins": [
+                16,
+                17,
+                23
+            ]
+        },
+        {
+            "id": "button",
+            "label": "Button",
+            "type": "button",
+            "pin": 27
+        },
+        {
+            "id": "switch",
+            "label": "Switch",
+            "type": "switch",
+            "pin": 26
+        },
+        {
+            "id": "probe",
+            "label": "Status probe",
+            "type": "probe",
+            "pin": 2
+        },
+        {
+            "id": "pixel",
+            "label": "WS2812 pixel",
+            "type": "ws2812b",
+            "pin": 18,
+            "length": 1
+        },
+        {
+            "id": "strip",
+            "label": "WS2812 strip",
+            "type": "ws2812b",
+            "pin": 19,
+            "length": 8
+        },
+        {
+            "id": "matrix",
+            "label": "Dot matrix",
+            "type": "max7219",
+            "din": 25,
+            "clk": 32,
+            "load": 33,
+            "length": 2
+        }
+    ]
+}

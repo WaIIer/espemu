@@ -1,0 +1,46 @@
+{
+    "v": 1,
+    "target": "esp32",
+    "buses": [
+        {
+            "id": "i2c0",
+            "type": "i2c",
+            "controller": 0,
+            "sda": 21,
+            "scl": 22,
+            "frequencyHz": 100000
+        }
+    ],
+    "devices": [
+        {
+            "id": "environment",
+            "type": "bme280",
+            "bus": "i2c0",
+            "address": 118
+        },
+        {
+            "id": "temperature",
+            "type": "tmp105",
+            "bus": "i2c0",
+            "address": 72
+        },
+        {
+            "id": "light",
+            "type": "bh1750",
+            "bus": "i2c0",
+            "address": 35
+        },
+        {
+            "id": "motion",
+            "type": "mpu6050",
+            "bus": "i2c0",
+            "address": 104
+        },
+        {
+            "id": "pixel",
+            "type": "ws2812b",
+            "pin": 18,
+            "length": 1
+        }
+    ]
+}

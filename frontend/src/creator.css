@@ -1,0 +1,203 @@
+.creator-main {
+    padding: 28px 32px;
+    max-width: 1440px;
+    margin: 0 auto;
+}
+
+.creator-heading {
+    margin-bottom: 24px;
+}
+
+.creator-heading h2 {
+    font-size: 22px;
+    margin-bottom: 8px;
+}
+
+.creator-heading p,
+.creator-card p {
+    line-height: 1.6;
+}
+
+.creator-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 24px;
+    align-items: start;
+}
+
+.creator-card {
+    min-width: 0;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--paper);
+}
+
+.creator-card h2,
+.creator-card p,
+.creator-card pre,
+.creator-card form > button {
+    margin-bottom: 14px;
+}
+
+.creator-fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.creator-card label:not(.creator-check) {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 13px;
+    margin-bottom: 14px;
+}
+
+.creator-card input:not([type=checkbox]),
+.creator-card select,
+.creator-card textarea {
+    width: 100%;
+    padding: 8px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+}
+
+.creator-check {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.creator-card textarea,
+.creator-card pre {
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+}
+
+.creator-card textarea {
+    resize: vertical;
+}
+
+.creator-card .inline-error {
+    overflow-wrap: anywhere;
+}
+
+.creator-card pre {
+    background: var(--page, #f5f7f6);
+    padding: 12px;
+    border: 1px solid var(--line);
+}
+
+.creator-device {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    border-bottom: 1px solid var(--line);
+    padding: 10px 0;
+    overflow-wrap: anywhere;
+}
+
+.creator-device small {
+    display: block;
+    color: var(--muted);
+}
+
+.creator-export {
+    position: sticky;
+    top: 20px;
+}
+
+@media (max-width: 800px) {
+    .creator-layout {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .creator-main {
+        padding: 20px 14px;
+    }
+
+    .creator-export {
+        position: static;
+    }
+}
+
+.creator-session .meta {
+    text-align: left;
+    font-family: inherit;
+}
+
+.creator-session code {
+    overflow-wrap: anywhere;
+}
+
+.creator-location {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: flex-end;
+}
+
+.creator-location label {
+    flex: 1 1 240px;
+    min-width: 0;
+}
+
+.creator-location > button {
+    margin-bottom: 14px;
+}
+
+.folder-picker {
+    width: min(560px, calc(100vw - 32px));
+    max-height: calc(100vh - 48px);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--paper);
+    color: inherit;
+}
+
+.folder-picker::backdrop {
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.folder-picker-path {
+    display: flex;
+    gap: 6px;
+    margin: 10px 0;
+}
+
+.folder-picker-path input {
+    flex: 1;
+    min-width: 0;
+}
+
+.folder-picker-list {
+    list-style: none;
+    margin: 0 0 12px;
+    padding: 0;
+    max-height: 45vh;
+    overflow-y: auto;
+    border: 1px solid var(--line);
+}
+
+.folder-picker-list button {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    width: 100%;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    border-radius: 0;
+    text-align: left;
+    overflow-wrap: anywhere;
+}
+
+.folder-picker-list .meta {
+    padding: 8px;
+}

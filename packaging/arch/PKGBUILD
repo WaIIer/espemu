@@ -1,0 +1,20 @@
+# Packages a prebuilt tree from packaging/build-tree.sh; see packaging/build-arch.sh.
+pkgname=espemu
+pkgver=${ESPEMU_VERSION:?}
+pkgrel=1
+pkgdesc='ESP32 emulator workbench with simulated peripherals, ESP-IDF toolchain and web UI'
+arch=(x86_64)
+url=${ESPEMU_URL:-https://github.com/WaIIer/espemu}
+license=(MIT GPL-2.0-only GPL-2.0-or-later GPL-3.0-or-later LGPL-2.1-or-later Apache-2.0 BSD-3-Clause PSF-2.0)
+depends=(bash make glibc gcc-libs glib2 pixman libgcrypt libslirp zlib libusb systemd-libs)
+optdepends=('git: project version strings in firmware builds')
+# Keep the bundled cross toolchain byte-identical to the .deb: no stripping or tidying.
+options=(!strip !debug libtool staticlibs !purge !zipman emptydirs)
+
+package() {
+    install -d "$pkgdir/usr/lib" "$pkgdir/usr/bin" "$pkgdir/usr/share/licenses/$pkgname"
+    cp -a --no-preserve=ownership "${ESPEMU_TREE:?}" "$pkgdir/usr/lib/espemu"
+    ln -s ../lib/espemu/tools/espemu.sh "$pkgdir/usr/bin/espemu"
+    ln -s ../../../lib/espemu/LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+    ln -s ../../../lib/espemu/THIRD-PARTY-NOTICES "$pkgdir/usr/share/licenses/$pkgname/THIRD-PARTY-NOTICES"
+}

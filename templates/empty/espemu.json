@@ -1,0 +1,6 @@
+{
+    "v": 1,
+    "target": "esp32",
+    "buses": [],
+    "devices": []
+}

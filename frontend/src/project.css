@@ -1,0 +1,692 @@
+.project-main {
+    padding: 0 32px 24px;
+    display: flex;
+    flex-direction: column;
+}
+
+:root {
+    --bs-body-font-family: 'IBM Plex Sans', sans-serif;
+    --bs-font-monospace: 'IBM Plex Mono', monospace;
+    --bs-border-radius: 4px;
+}
+
+body {
+    background: var(--page, #f5f7f6);
+    color: var(--ink);
+}
+
+.app-header {
+    background: var(--paper);
+}
+
+.workbench-primary>.nav-tabs {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    border-color: var(--line);
+}
+
+.workbench-primary>.nav-tabs .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    white-space: nowrap;
+    color: var(--muted);
+    padding: 10px 14px;
+    border-radius: 4px 4px 0 0;
+}
+
+.workbench-primary>.nav-tabs .nav-link.active {
+    color: var(--teal);
+    background: var(--paper);
+    border-color: var(--line) var(--line) var(--paper);
+}
+
+.workbench-primary, .workbench-primary>.tab-content {
+    width: 100%;
+    min-width: 0;
+}
+
+.runtime-field { display: grid; gap: 3px; min-width: 0; }
+.runtime-field input { max-width: 100%; }
+.runtime-input-device h3, .runtime-model h3 { overflow-wrap: anywhere; }
+.runtime-device-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; margin: 10px 0; min-width: 0; }
+.runtime-device-tools label { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; max-width: 100%; }
+.runtime-device-tools input, .runtime-device-tools select { max-width: 100%; min-width: 0; }
+.workbench-controls { margin-bottom: 12px; font-size: 13px; }
+.workbench-controls input, .workbench-controls select, .runtime-event-view input[type=search] {
+    min-height: 32px;
+    padding: 4px 8px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: var(--paper);
+    color: var(--ink);
+}
+.workbench-controls .console-dock-control { margin-left: auto; }
+.workbench-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; min-width: 0; }
+.workbench-dock { display: grid; gap: 14px; min-width: 0; align-content: start; }
+.workbench-dock > section { padding: 0; min-width: 0; }
+.workbench-dock .serial-toolbar { gap: 8px 10px; padding: 8px 0; }
+.workbench-dock .serial-filter { min-width: 110px; }
+.workbench-dock .runtime-device-tools { gap: 6px 12px; font-size: 12px; }
+.workbench-dock .serial-viewport, .workbench-dock .runtime-event-view .runtime-events {
+    height: clamp(150px, 25vh, 260px);
+    min-height: 0;
+}
+.workbench-dock > section:only-child :is(.serial-viewport, .runtime-events) { height: clamp(180px, 50vh, 490px); }
+.workbench-dock .serial-viewport { padding: 9px; }
+
+@media (min-width:1100px) {
+    .workbench-layout-docked { grid-template-columns: minmax(0, 1fr) minmax(300px, 29%); }
+    .workbench-dock { position: sticky; top: 12px; align-self: start; padding-left: 14px; border-left: 1px solid var(--line); }
+}
+
+.runtime-observations { padding: 12px 0; border-bottom: 1px solid var(--line); margin-bottom: 12px; }
+.runtime-circuit li, .peripheral-identity, .brand span { overflow-wrap: anywhere; }
+
+input[type=number],
+select,
+textarea {
+    background: var(--paper);
+    border-color: var(--line);
+}
+
+.runtime-channel-values>div {
+    min-width: 0;
+    max-width: 100%;
+    flex-wrap: wrap;
+    overflow-wrap: anywhere;
+}
+
+.runtime-event-view {
+    padding: 22px 0;
+}
+
+.runtime-event-view .runtime-events {
+    height: min(66vh, 700px);
+}
+
+.serial-monitor {
+    padding: 22px 0;
+    min-width: 0;
+}
+
+.serial-toolbar {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 12px 0;
+    font-size: 12px;
+}
+
+.serial-filter {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 160px;
+    flex: 1;
+    max-width: 420px;
+}
+
+.serial-actions {
+    display: flex;
+    gap: 6px;
+    margin-left: auto;
+}
+
+.serial-actions button {
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+}
+
+.serial-viewport {
+    width: 100%;
+    height: min(66vh, 720px);
+    min-height: 300px;
+    overflow: auto;
+    margin: 0;
+    padding: 16px;
+    background: var(--paper);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    font: var(--serial-font-size, 13px)/1.7 var(--mono);
+    color: var(--ink);
+    white-space: pre;
+    tab-size: 4;
+}
+
+.serial-viewport.serial-wrap {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.theme-modes {
+    display: flex;
+    gap: 2px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 3px;
+    margin-bottom: 18px;
+}
+
+.theme-modes button {
+    flex: 1;
+    height: 34px;
+    background: transparent;
+    display: grid;
+    place-items: center;
+    border-radius: 3px;
+}
+
+.theme-modes button[aria-pressed=true] {
+    background: var(--teal);
+    color: var(--accent-ink);
+}
+
+.theme-color-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 12px 0;
+    gap: 16px;
+}
+
+.theme-color-row .form-control {
+    width: 52px;
+    height: 34px;
+    padding: 4px;
+}
+
+.theme-size-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 16px;
+    font-size: 12px;
+}
+
+.theme-reset {
+    background: transparent;
+    color: var(--teal);
+    font-size: 12px;
+    padding: 6px 0;
+}
+
+.modal-title {
+    font-size: 16px;
+}
+
+.modal-content {
+    border-radius: 6px;
+}
+
+.runtime-tools button:hover {
+    background: var(--line);
+}
+
+.gyro-modes button[aria-pressed=true] {
+    color: var(--accent-ink, #fff);
+}
+
+html[data-bs-theme=dark] .phase {
+    background: #263a2e;
+    color: #9addb2;
+}
+
+html[data-bs-theme=dark] .physical-button {
+    background: #25342a;
+    border-color: #607166;
+}
+
+html[data-bs-theme=dark] .peripheral-actions button:hover {
+    background: var(--line);
+}
+
+.runtime-tools {
+    display: flex;
+    gap: 4px;
+    margin-left: auto;
+}
+
+.runtime-tools button {
+    width: 34px;
+    height: 34px;
+    background: transparent;
+    display: grid;
+    place-items: center;
+    border-radius: 4px;
+}
+
+.runtime-tools button:hover {
+    background: #e6eee9;
+}
+
+.runtime-circuit {
+    padding: 18px 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.runtime-lcd {
+    padding: 18px 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.lcd-bezel {
+    display: inline-block;
+    max-width: 100%;
+    padding: 12px;
+    margin: 10px 0 6px;
+    border-radius: 6px;
+    background: #1d2a20;
+    overflow-x: auto;
+}
+
+.lcd-screen {
+    display: grid;
+    gap: 3px;
+    padding: 8px;
+    background: #4b5c2a;
+    color: #1c2410;
+    font: 600 20px/1 ui-monospace, monospace;
+}
+
+.lcd-lit .lcd-screen {
+    background: #9fd13a;
+    box-shadow: inset 0 0 12px rgba(255, 255, 210, 0.45);
+}
+
+.lcd-cell {
+    position: relative;
+    display: inline-flex;
+    width: 0.8em;
+    height: 1.15em;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.06);
+}
+
+.lcd-glyph {
+    width: 100%;
+    height: 100%;
+    fill: currentColor;
+}
+
+.lcd-underline {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: currentColor;
+}
+
+.lcd-blink::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: currentColor;
+    animation: lcd-blink 0.82s steps(1) infinite;
+}
+
+@keyframes lcd-blink {
+    50% { opacity: 0; }
+}
+
+@media (max-width: 600px) {
+    .lcd-screen { font-size: 14px; gap: 2px; padding: 6px; }
+}
+
+.runtime-speaker {
+    padding: 18px 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.speaker-view {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: flex-start;
+    margin-top: 10px;
+}
+
+.speaker-waveform {
+    width: min(100%, 320px);
+    height: 64px;
+    border: 1px solid var(--line);
+    color: var(--teal);
+}
+
+.runtime-camera {
+    padding: 18px 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.camera-view {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: flex-start;
+    margin-top: 10px;
+}
+
+.camera-preview {
+    width: min(100%, 320px);
+    height: auto;
+    image-rendering: pixelated;
+    border: 1px solid var(--line);
+    background: #111;
+}
+
+.camera-stats {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    gap: 4px 12px;
+    margin: 0;
+    min-width: 0;
+}
+
+.camera-stats dt {
+    font-weight: 600;
+}
+
+.camera-stats dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+.runtime-bitmap {
+    width: 100%;
+    max-height: 280px;
+    object-fit: contain;
+    object-position: left;
+    display: block;
+    margin: 10px 0;
+}
+
+.runtime-clock {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    font: 11px var(--mono);
+    color: var(--muted);
+}
+
+.runtime-grid {
+    display: grid;
+    grid-template-columns: 270px minmax(0, 1fr);
+    gap: 24px;
+    padding-top: 22px;
+}
+
+.runtime-grid aside {
+    min-width: 0;
+    border-right: 1px solid var(--line);
+    padding-right: 18px;
+}
+
+.runtime-input-device {
+    padding: 15px 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.runtime-input-device h3 {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.runtime-input {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 4px;
+    margin-top: 10px;
+    font-size: 12px;
+}
+
+.runtime-input input {
+    grid-column: 1 / -1;
+}
+
+.runtime-input .runtime-field {
+    grid-column: 1 / -1;
+}
+
+.runtime-input-device .fault-row {
+    font-size: 11px;
+    gap: 12px;
+}
+
+.runtime-input-device .fault-row label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.runtime-model-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 175px), 1fr));
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.runtime-model {
+    padding: 12px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    min-width: 0;
+}
+
+.runtime-model h3 {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+}
+
+.runtime-model .reading strong {
+    font-size: 20px;
+}
+
+.runtime-application {
+    padding: 22px 0;
+    margin-top: 18px;
+    border-top: 1px solid var(--line);
+}
+
+.runtime-channel-values {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 12px 0;
+}
+
+.runtime-channel-values>div {
+    display: flex;
+    gap: 8px;
+    font-size: 12px;
+    align-items: center;
+}
+
+.runtime-chart {
+    width: 100%;
+    height: 250px;
+    margin-top: 12px;
+}
+
+.runtime-logs {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 18px;
+}
+
+.runtime-events {
+    height: 224px;
+    overflow: auto;
+    margin-top: 9px;
+    font-size: 11px;
+}
+
+.runtime-events>div {
+    display: grid;
+    grid-template-columns: 60px 55px minmax(0, 1fr);
+    gap: 6px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--line);
+    overflow-wrap: anywhere;
+}
+
+.runtime-scenarios {
+    padding: 16px 0;
+}
+
+.runtime-scenarios label {
+    display: block;
+    margin-top: 9px;
+    font-size: 11px;
+}
+
+.runtime-scenarios select,
+.runtime-scenarios input,
+.runtime-scenarios textarea {
+    width: 100%;
+    margin-top: 4px;
+}
+
+.runtime-scenarios button {
+    margin-top: 12px;
+}
+
+@media(max-width:900px) {
+    .runtime-grid {
+        grid-template-columns: minmax(0, 1fr);
+        row-gap: 12px;
+    }
+
+    .runtime-grid > div {
+        display: contents;
+    }
+
+    .runtime-observations {
+        grid-row: 1;
+        padding-top: 0;
+        margin-bottom: 0;
+    }
+
+    .runtime-grid aside {
+        border: 0;
+        padding: 0;
+    }
+
+    .runtime-logs {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .project-main {
+        padding: 0 16px 20px;
+    }
+}
+
+@media(max-width:480px) {
+    .workbench-controls label { width: 100%; }
+    .workbench-controls label :is(input, select) { flex: 1; }
+    .workbench-controls .console-dock-control { margin-left: 0; }
+
+    .app-header {
+        padding: 12px 16px;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .runtime-tools {
+        width: 100%;
+        margin: 0;
+        justify-content: flex-end;
+    }
+
+    .runtime-model-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .runtime-clock {
+        gap: 8px;
+    }
+
+    .runtime-circuit .section-heading {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+}
+
+@media(max-width:600px) {
+    .runtime-bitmap {
+        max-height: none;
+    }
+}
+
+/* Ticking virtual time must not reflow the header or move the tabs below it. */
+.header-session>span {
+    font-variant-numeric: tabular-nums;
+}
+
+.runtime-tools a {
+    align-self: center;
+}
+
+/* Narrow toolbars must still wrap, or the first controls scroll out of view. */
+@media (min-width: 720px) {
+    .header-session>span,
+    .runtime-tools a {
+        white-space: nowrap;
+    }
+}
+
+.runtime-field .scenario-driven {
+    color: var(--teal);
+}
+
+.pinned-signals {
+    list-style: none;
+    margin: 8px 0 0;
+    padding: 0;
+    display: grid;
+    gap: 4px;
+}
+
+.pinned-signals li {
+    display: grid;
+    grid-template-columns: 11ch minmax(0, 1fr) auto 28px;
+    font-size: 13px;
+    align-items: center;
+    gap: 8px;
+    min-height: 32px;
+    border-bottom: 1px solid var(--line);
+}
+
+.pinned-signals .meta {
+    white-space: nowrap;
+}
+
+.pinned-signals .pinned-label {
+    overflow-wrap: anywhere;
+}
+
+.pinned-signals output {
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.pinned-signals button {
+    width: 28px;
+    height: 28px;
+    border: 0;
+    background: transparent;
+    color: var(--muted);
+}

@@ -1,0 +1,48 @@
+name: Firmware and Workbench
+on:
+  # Runs only once a pull request is merged, on the merged commit.
+  pull_request_target:
+    types: [closed]
+    branches: ["main"]
+  workflow_dispatch:
+    inputs:
+      full_verification:
+        description: Run the full container, firmware and browser verification
+        type: boolean
+        required: false
+        default: false
+permissions:
+  contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  agent-customizations:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.pull_request.merged }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha || github.sha }}
+          persist-credentials: false
+      - name: Typecheck and run fast framework checks
+        run: |
+          bash .github/skills/espemu-environment/scripts/setup.sh --web
+          source tools/env.sh
+          npm run typecheck
+          npm run test:fast
+  actual-emulator:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.full_verification }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Build the pinned verification image
+        run: docker build --target verification -t espemu-verification .
+      - name: Verify firmware, models, workbench and ten-minute stream
+        run: docker run --rm --init --cap-drop=ALL --security-opt=no-new-privileges -e CI=true -e SOAK=1 espemu-verification

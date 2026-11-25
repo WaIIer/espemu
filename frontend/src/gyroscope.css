@@ -1,0 +1,150 @@
+.gyro-workbench {
+    padding: 18px 0 22px;
+    border-bottom: 1px solid var(--line);
+    min-width: 0;
+}
+
+.gyro-workbench .section-heading h2 {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.gyro-toolbar {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.gyro-modes {
+    display: flex;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.gyro-modes button {
+    border: 0;
+    border-radius: 0;
+    min-width: 52px;
+    padding: 6px 12px;
+    font-size: 12px;
+    background: var(--paper);
+}
+
+.gyro-modes button[aria-pressed="true"] {
+    background: var(--teal);
+    color: #fff;
+}
+
+.gyro-reset {
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+}
+
+.gyro-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 170px;
+    gap: 24px;
+    align-items: center;
+    margin-top: 12px;
+}
+
+.gyro-viewport {
+    width: 100%;
+    height: 380px;
+    min-width: 0;
+    overflow: hidden;
+    background: var(--canvas, #f3f6f4);
+}
+
+.gyro-canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    touch-action: none;
+    cursor: grab;
+    outline-offset: -3px;
+}
+
+.gyro-dragging .gyro-canvas {
+    cursor: grabbing;
+}
+
+.gyro-readouts {
+    min-width: 0;
+}
+
+.gyro-readouts h3 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 16px 0 8px;
+    font-size: 12px;
+}
+
+.gyro-axis {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    border-bottom: 1px solid var(--line);
+    padding: 8px 0;
+    font: 13px var(--mono);
+}
+
+.axis-0 {
+    color: #c34252;
+}
+
+.axis-1 {
+    color: #16835c;
+}
+
+.axis-2 {
+    color: #3564be;
+}
+
+.gyro-axis output {
+    min-width: 8ch;
+    text-align: right;
+}
+
+@media(max-width:600px) {
+    .gyro-workbench .section-heading {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .gyro-layout {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 8px;
+    }
+
+    .gyro-viewport {
+        height: 320px;
+    }
+
+    .gyro-readouts {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0 14px;
+    }
+
+    .gyro-readouts h3,
+    .gyro-readouts>.reading-status {
+        grid-column: 1 / -1;
+    }
+
+    .gyro-axis {
+        gap: 8px;
+        font-size: 12px;
+    }
+
+    .gyro-toolbar {
+        margin-left: auto;
+    }
+}
