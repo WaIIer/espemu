@@ -35,6 +35,7 @@ their descriptions. Product/version support and user settings can vary.
 | [espemu-firmware-sdk](./espemu-firmware-sdk/SKILL.md) | Short C/C++ device APIs and dependencies | Automatically packaged driver/header/license/CMake and real firmware proof |
 | [espemu-project-tooling](./espemu-project-tooling/SKILL.md) | Wizard/artifacts/Make/script extensions | Correct generated samples and source-preserving create/add workflows |
 | [espemu-validation](./espemu-validation/SKILL.md) | Focused tests through full CI/soak | Scope-to-test matrix, fresh artifacts and accurate verification claims |
+| [unslop](./unslop/SKILL.md) | Writing without AI tells | Numbered rules for docs, PR text, UI strings and replies |
 | [espemu-pre-pr](./espemu-pre-pr/SKILL.md) | Before commit/push/ready/publication | Scope/security/staged-file audit and concrete pre-PR readiness decision |
 | [espemu-pr-review](./espemu-pr-review/SKILL.md) | Independent read-only review | Severity-ordered actionable findings, evidence and residual test gaps |
 | [espemu-pr-review-delivery](./espemu-pr-review-delivery/SKILL.md) | Fix review comments/CI and deliver | Thread dispositions, verified updates and explicitly authorized exact-head merge |
