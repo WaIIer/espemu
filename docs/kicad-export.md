@@ -77,6 +77,10 @@ In particular:
 An omission never produces a placeholder component, connector or wire.
 Simulation faults and physical-input values do not change the hardware circuit.
 
+The web project creator and `make add_component` show the same omission reason
+when you pick an affected device type or pin. Both read the rules from
+`shared/kicad-support.ts`, which the exporter also uses.
+
 ## Artifacts and regeneration
 
 The root schematic links one sheet per included device. Explicit global net

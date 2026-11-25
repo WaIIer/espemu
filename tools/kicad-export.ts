@@ -2,7 +2,8 @@ import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { z } from 'zod';
 import { ProjectManifestSchema, type ProjectManifest } from '../shared/manifest.ts';
-import { isSensor, wiredPins, type CircuitDevice, type DeviceType } from '../shared/registry.ts';
+import { isSensor, type DeviceType } from '../shared/registry.ts';
+import { kicadOmission } from '../shared/kicad-support.ts';
 
 const pinSchema = z.object({ number: z.string(), name: z.string(), type: z.string(), x: z.number(), y: z.number(), angle: z.number() });
 const symbolSchema = z.object({ symbol: z.string(), pins: z.array(pinSchema), reference: z.string(), footprint: z.string(), datasheet: z.string() });
@@ -44,49 +45,6 @@ type Component = {
 };
 type Sheet = { filename: string; title: string; key: string; components: Component[]; notes: string[] };
 type DeviceResult = { id: string; type: DeviceType; status: 'included' | 'omitted'; reason: string; sheet?: string; references: string[] };
-
-// A simulated module name alone does not establish a real module's connector,
-// onboard pull-ups, voltage compatibility or comparator circuit.
-const unsupported: Partial<Record<DeviceType, string>> = {
-  tmp105: 'TMP105 has only two physical addresses (0x48/0x49), not the entire emulated range. Its six-ball package mapping/land pattern is not qualified for this export.',
-  bh1750: 'BH1750FVI requires a qualified DVI power-on reset circuit; tying DVI directly to VCC is not safe. No qualified reset/land-pattern profile is available.',
-  ws2812b: 'A 5 V pixel chain requires a qualified 3.3-to-5 V buffer, power distribution and per-pixel bypassing; no complete chain profile is available.',
-  max7219: 'The matrix module does not identify its actual LED matrix pinout, ISET resistor, 5 V level translation or chain power requirements.',
-  max98357a: 'The amplifier module does not identify its package, SD_MODE/gain network, speaker load or output filtering.',
-  hd44780: 'The backpack does not identify its PCF8574 variant, LCD pinout, contrast/backlight circuitry or 5 V I2C translation.',
-  ov2640: 'The camera requires an exact module/connector and multiple supply rails. An ESP32-CAM camera cannot be substituted onto a WROOM board.',
-  hc_sr501: 'HC-SR501 module variants have unqualified connector ordering, supply and onboard circuitry.',
-  hc_sr505: 'HC-SR505 module variants have unqualified connector ordering, supply and onboard circuitry.',
-  rcwl_0516: 'RCWL-0516 module variants have unqualified connector ordering, power and antenna/layout requirements.',
-  ttp223: 'The module does not identify its TTP223 variant, touch electrode, sensitivity capacitor or output-mode straps.',
-  ss451a: 'The physical SS451A is omnipolar, not the latch named in the emulator. No fidelity-qualified hardware profile is available.',
-  sw_520d: 'The exact tilt-switch package and contact arrangement are not qualified.',
-  sw_420: 'The DOUT module needs an identified comparator, threshold network and pull-up rail; a bare switch would not represent it.',
-  ky_032: 'The obstacle module needs identified optics, enable/threshold circuitry and an ESP32-safe output rail.',
-  ky_026: 'The flame module needs an identified detector, comparator and ESP32-safe output rail.',
-  fc_37: 'The rain module needs an identified probe, comparator/threshold network and ESP32-safe output rail.',
-  yl_69: 'The soil module needs an identified probe, comparator/threshold network and ESP32-safe output rail.',
-  mq_2: 'The gas module needs heater power, an identified comparator/threshold network and ESP32-safe output rail.',
-  mq_135: 'The gas module needs heater power, an identified comparator/threshold network and ESP32-safe output rail.',
-  ky_038: 'The sound module needs an identified microphone, bias/comparator network and ESP32-safe output rail.',
-  st188: 'The reflective DOUT module needs identified IR drive, receiver/comparator circuitry and an ESP32-safe output rail.',
-  reed_59170: 'The exact 59170 ordering code, footprint and contact configuration are not qualified.',
-  sn04_n: 'The industrial sensor requires an identified supply, cable pinout and protected/isolated interface; do not connect it directly to ESP32.',
-  lj12a3: 'The industrial sensor requires an identified supply, cable pinout and protected/isolated interface; do not connect it directly to ESP32.',
-  e18_d80nk: 'The optical module requires an identified cable pinout, supply and output pull-up/translation circuit.',
-};
-
-function omission(device: CircuitDevice): string | undefined {
-  if (unsupported[device.type]) return unsupported[device.type];
-  if (device.type === 'a3144' && !device.activeLow) return 'A3144 has an active-low open-collector output; an active-high declaration needs a qualified inverter.';
-  if (!isSensor(device)) {
-    const pins = wiredPins(device);
-    if (pins.some(pin => pin === 37 || pin === 38)) return 'GPIO37/38 are not exposed on the selected ESP32-WROOM-32 module.';
-    if (pins.some(pin => [0, 2, 5, 12, 15].includes(pin))) return 'This circuit uses an ESP32 boot-strapping GPIO; its power-on loading is not qualified. Reassign it before exporting.';
-    if ((device.type === 'button' || device.type === 'switch') && device.pin === 1) return 'A contact on GPIO1 can short the ESP32 boot UART transmitter to a supply rail; reassign the contact.';
-  }
-  return undefined;
-}
 
 function renderSheet(sheet: Sheet, root: boolean, children: Sheet[]): string {
   const sheetUuid = root ? rootUuid : uuid(sheet.key);
@@ -180,7 +138,7 @@ export function kicadProjectFiles(value: ProjectManifest): Record<string, string
   const usedGpios = new Set<number>();
 
   for (const [index, device] of manifest.devices.entries()) {
-    const reason = omission(device);
+    const reason = kicadOmission(device);
     if (reason) {
       results.push({ id: device.id, type: device.type, status: 'omitted', reason, references: [] });
       continue;

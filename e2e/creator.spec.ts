@@ -156,6 +156,28 @@ test('web creator offers registry polarity defaults rather than fixed UI assumpt
   await expect(page.getByLabel('Active low',{exact:true})).not.toBeChecked();
 });
 
+test('the creator calls out devices that KiCad export skips',async({page},info)=>{
+  await page.goto('/create');
+  const note=page.locator('.creator-card form .kicad-note');
+  await page.getByLabel('Device type').selectOption('tmp105');
+  await expect(note).toHaveText(/^KiCad export skips this device\. The TMP105/);
+  await page.getByLabel('Device type').selectOption('led');
+  await expect(note).toHaveCount(0);
+  await page.getByLabel('GPIO pin').selectOption('2');
+  await page.getByRole('button',{name:'Add device',exact:true}).click();
+  await page.getByLabel('GPIO pin').selectOption('25');
+  await page.getByRole('button',{name:'Add device',exact:true}).click();
+  const rows=page.locator('.creator-device');
+  await expect(rows.nth(0).locator('.kicad-note')).toHaveText('KiCad export skips this device. GPIO2 is an ESP32 boot pin, and a device on it can stop the board from booting. Choose another pin to export this device.');
+  await expect(rows.nth(1).locator('.kicad-note')).toHaveCount(0);
+  await page.getByLabel('Device type').selectOption('ws2812b');
+  for(const width of [1440,375]){
+    await page.setViewportSize({width,height:900});
+    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+    await page.screenshot({path:info.outputPath(`kicad-notes-${width}.png`),fullPage:true});
+  }
+});
+
 test('moving or removing a shared probe preserves the driving switch', async ({ page }) => {
   await page.goto('/create');
   const circuit = { v: 1, target: 'esp32', devices: [{ type: 'switch', id: 'toggle', pin: 27 }, { type: 'probe', id: 'observe', pin: 27 }], gpioInputs: [{ pin: 27, level: 1 }] };

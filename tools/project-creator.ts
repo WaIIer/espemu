@@ -12,6 +12,7 @@ import { PERIPHERAL_REGISTRY, PIN_NUMBERS, controls, isSensor, wiredPins, type C
 import { generateProjectArtifacts, devicePinsHeader, deviceMacroName } from './project-artifacts.ts';
 import { loadProject } from '../server/project.ts';
 import { ProjectCreatorConfigSchema } from '../shared/project-creator.ts';
+import { kicadOmission } from '../shared/kicad-support.ts';
 import { openBrowser, serveCreator } from './web-creator.ts';
 
 export const frameworkRoot = fileURLToPath(new URL('../', import.meta.url));
@@ -378,6 +379,8 @@ export async function main(args = process.argv.slice(2)): Promise<void> {
     const wiring='address' in added?`I2C 0x${added.address.toString(16)}`:wiredPins(added).map(pin=>`GPIO${pin}`).join('/');
     console.log(`Added ${added.id} (${PERIPHERAL_REGISTRY[added.type].label}, ${wiring}); macros ${deviceMacroName(added.id)}_* are in main/device_pins.h and usage is in ESPEMU-DEVICES.md. Run make run when ready.`);
     if (result.preserved.length) console.log(`Edited generated files preserved: ${result.preserved.join(', ')}`);
+    const kicad=kicadOmission(added);
+    if (kicad) console.log(`KiCad export skips ${added.id}. ${kicad}`);
     return;
   }
   finishProject(createProject(plan), plan);

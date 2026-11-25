@@ -6,6 +6,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { ProjectManifestSchema } from '../shared/manifest.ts';
 import { kicadProjectFiles } from '../tools/kicad-export.ts';
+import { kicadOmission, kicadTypeLimitation } from '../shared/kicad-support.ts';
 import { generateProjectArtifacts } from '../tools/project-artifacts.ts';
 
 const manifest = (devices: unknown[]) => ProjectManifestSchema.parse({
@@ -108,8 +109,20 @@ test('boot UART contacts and inverted bare Hall sensors are omitted, not shorted
   const files = kicadProjectFiles(manifest([{ id: 'hall', type: 'a3144', pin: 25, activeLow: false }]));
   const report = JSON.parse(files['kicad/export-report.json']);
   assert.equal(report.devices[0].status, 'omitted');
-  assert.match(report.devices[0].reason, /qualified inverter/);
+  assert.match(report.devices[0].reason, /needs an inverter/);
   assert.ok(!files['kicad/espemu.kicad_sch'].includes('+5V'));
+});
+
+test('the creator and exporter share one set of KiCad limitations', () => {
+  const device = (value: object) => manifest([value]).devices[0];
+  assert.match(kicadTypeLimitation('tmp105') ?? '', /TMP105/);
+  assert.equal(kicadTypeLimitation('led'), undefined);
+  assert.match(kicadOmission(device({ id: 'status', type: 'led', pin: 2 })) ?? '', /GPIO2 is an ESP32 boot pin/);
+  assert.match(kicadOmission(device({ id: 'high', type: 'button', pin: 37 })) ?? '', /GPIO37 is not available/);
+  assert.equal(kicadOmission(device({ id: 'status', type: 'led', pin: 25 })), undefined);
+  assert.equal(kicadOmission(device({ id: 'hall', type: 'a3144', pin: 25 })), undefined);
+  const files = kicadProjectFiles(manifest([{ id: 'status', type: 'led', pin: 2 }]));
+  assert.equal(JSON.parse(files['kicad/export-report.json']).devices[0].reason, kicadOmission(device({ id: 'status', type: 'led', pin: 2 })));
 });
 
 test('all address alternatives and maximum device hierarchy remain deterministic and correctly strapped', () => {
