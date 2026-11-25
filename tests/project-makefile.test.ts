@@ -182,6 +182,11 @@ test('prepared-image wrappers reuse installed tools without bootstrapping worksp
     writeFileSync(join(framework,'server/index.ts'),'console.log("WEB_REUSED");\n');
     writeFileSync(join(framework,'dist/index.html'),'<html></html>');
     const qemu=join(framework,'.cache/qemu/build/qemu-system-xtensa');writeFileSync(qemu,'#!/usr/bin/env bash\nexit 0\n');chmodSync(qemu,0o755);
+    // A prepared image has ESP-IDF installed; do not depend on the host having one.
+    const idf=join(temporary,'esp-idf'),idfTools=join(temporary,'idf-tools');
+    for(const folder of [idf,join(idfTools,'python_env'),join(idfTools,'tools/xtensa-esp-elf')])mkdirSync(folder,{recursive:true});
+    writeFileSync(join(idf,'export.sh'),'');writeFileSync(join(idf,'.espemu-idf-commit'),readFileSync(join(root,'versions.env'),'utf8').match(/^IDF_COMMIT=(.*)$/m)![1]);
+    const env={...process.env,IDF_PATH:idf,IDF_TOOLS_PATH:idfTools};
     writeFileSync(join(project,'CMakeLists.txt'),'project(prepared)');writeFileSync(join(project,'espemu.json'),' {"v":1,"target":"esp32"}');writeFileSync(join(project,'build/qemu_flash.bin'),'fixture');
     for(const [script,args,expected]of [
       ['create-project.sh',[],/CREATOR_REUSED/],
@@ -190,8 +195,8 @@ test('prepared-image wrappers reuse installed tools without bootstrapping worksp
       ['project-command.sh',['build',project],/NATIVE_BUILD_REUSED/],
       ['demo.sh',[project,'--no-build'],/WEB_REUSED/],
     ] as const){
-      const result=spawnSync('bash',[join(framework,'tools',script),...args],{encoding:'utf8',env:process.env,timeout:10000});
-      assert.equal(result.status,0,result.stderr);assert.match(result.stdout,expected);assert.doesNotMatch(result.stderr,/UNEXPECTED_BOOTSTRAP/);
+      const result=spawnSync('bash',[join(framework,'tools',script),...args],{encoding:'utf8',env,timeout:10000});
+      assert.equal(result.status,0,`${script}: ${result.stderr}`);assert.match(result.stdout,expected);assert.doesNotMatch(result.stderr,/UNEXPECTED_BOOTSTRAP/);
     }
     assert.equal(existsSync(join(framework,'.cache/node')),false);
     writeFileSync(join(framework,'tools/artifact-provenance.sh'),'#!/usr/bin/env bash\nif [[ "$2" == qemu ]]; then printf "Stale qemu inputs\\n"; exit 3; fi\n');
