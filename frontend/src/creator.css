@@ -114,6 +114,10 @@
     top: 20px;
 }
 
+.creator-layout-single {
+    grid-template-columns: minmax(0, 860px);
+}
+
 @media (max-width: 800px) {
     .creator-layout {
         grid-template-columns: minmax(0, 1fr);
@@ -128,7 +132,8 @@
     }
 }
 
-.creator-session .meta {
+.creator-session .meta,
+.creator-export .meta {
     text-align: left;
     font-family: inherit;
 }

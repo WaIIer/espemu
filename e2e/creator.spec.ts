@@ -12,7 +12,7 @@ test('session-free creator copies JSON that the normal setup script turns into e
   page.on('request', request => { if (new URL(request.url()).pathname.startsWith('/api/')) runtimeRequests.push(request.url()); });
   page.on('websocket', socket => { if (new URL(socket.url()).pathname === '/ws') runtimeRequests.push(socket.url()); });
   await page.goto('/create');
-  await expect(page.getByRole('heading', { name: 'Create a local ESP-IDF project' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Create an ESP-IDF project' })).toBeVisible();
   const temporary = mkdtempSync(join(tmpdir(), 'espemu-browser-creator-'));
   try {
     for (const starter of ['empty', 'blinky', 'demo'] as const) {
@@ -46,8 +46,8 @@ test('session-free creator copies JSON that the normal setup script turns into e
 test('registry-backed devices, advanced scenarios and invalid edits are validated before copy', async ({ page }) => {
   page.on('dialog', dialog => void dialog.accept());
   await page.goto('/create/');
-  await page.getByLabel('Peripheral type').selectOption('tmp105');
-  await page.getByLabel('Instance id').fill('room');
+  await page.getByLabel('Device type').selectOption('tmp105');
+  await page.getByLabel('Device id').fill('room');
   await page.getByLabel('Initial Temperature (C)').fill('21');
   await page.getByRole('button', { name: 'Add device', exact: true }).click();
   let config = ProjectCreatorConfigSchema.parse(JSON.parse(await page.getByLabel('Project JSON', { exact: true }).inputValue()));
@@ -56,7 +56,7 @@ test('registry-backed devices, advanced scenarios and invalid edits are validate
   expect(config.manifest.devices[0]).toMatchObject({ id: 'room', address: 72 });
   await expect(page.getByLabel('I2C address')).toHaveValue('73');
 
-  await page.getByLabel('Peripheral type').selectOption('ws2812b');
+  await page.getByLabel('Device type').selectOption('ws2812b');
   await expect(page.getByLabel('GPIO pin').locator('option[value="21"]')).toHaveCount(0);
   await expect(page.getByLabel('GPIO pin').locator('option[value="34"]')).toHaveCount(0);
   await page.getByLabel('LED count').fill('8');
@@ -64,7 +64,7 @@ test('registry-backed devices, advanced scenarios and invalid edits are validate
   config = ProjectCreatorConfigSchema.parse(JSON.parse(await page.getByLabel('Project JSON', { exact: true }).inputValue()));
   expect(config.manifest.devices[1]).toMatchObject({ type: 'ws2812b', length: 8 });
   config.manifest.scenarios.push({ deviceId: 'room', channel: 'temperatureC', kind: 'sine', offset: 21, amplitude: 5, periodMs: 1000, seed: 42, frames: [] });
-  await page.getByText('Advanced circuit configuration', { exact: true }).click();
+  await page.getByText('Edit the circuit as JSON', { exact: true }).click();
   await page.getByLabel('Circuit JSON', { exact: true }).fill(JSON.stringify(config.manifest));
   const valid = await page.getByLabel('Project JSON', { exact: true }).inputValue();
   expect(ProjectCreatorConfigSchema.parse(JSON.parse(valid)).manifest.scenarios).toEqual(config.manifest.scenarios);
@@ -89,11 +89,11 @@ test('creator restores an invalid draft, renames devices, undoes removal and reo
   page.on('pageerror',error=>errors.push(error.message));
   page.on('console',entry=>{if(entry.type()==='error')errors.push(entry.text());});
   await page.goto('/create');
-  await page.getByLabel('Instance id').fill('room-alarm');
-  expect(await page.getByLabel('Instance id').evaluate((element:HTMLInputElement)=>element.checkValidity())).toBe(true);
+  await page.getByLabel('Device id').fill('room-alarm');
+  expect(await page.getByLabel('Device id').evaluate((element:HTMLInputElement)=>element.checkValidity())).toBe(true);
   await page.getByRole('button',{name:'Add device',exact:true}).click();
   await page.getByRole('button',{name:'Edit room-alarm'}).click();
-  await page.getByLabel('Instance id').fill('alarm');
+  await page.getByLabel('Device id').fill('alarm');
   await page.getByRole('button',{name:'Save device'}).click();
   await page.getByRole('button',{name:'Remove alarm'}).click();
   await page.getByRole('button',{name:'Undo'}).click();
@@ -101,11 +101,11 @@ test('creator restores an invalid draft, renames devices, undoes removal and reo
   const download=page.waitForEvent('download');
   await page.getByRole('button',{name:'Download JSON'}).click();
   const configuration=await (await download).path();
-  await page.getByText('Advanced circuit configuration',{exact:true}).click();
+  await page.getByText('Edit the circuit as JSON',{exact:true}).click();
   await page.getByLabel('Circuit JSON',{exact:true}).fill('{');
   await page.reload();
   await expect(page.getByRole('button',{name:'Edit alarm'})).toBeDisabled();
-  await page.getByText('Advanced circuit configuration',{exact:true}).click();
+  await page.getByText('Edit the circuit as JSON',{exact:true}).click();
   await expect(page.getByLabel('Circuit JSON',{exact:true})).toHaveValue('{');
   await page.getByLabel('Open project configuration').setInputFiles({name:'bad.json',mimeType:'application/json',buffer:Buffer.from('{')});
   await expect(page.getByRole('alert')).toBeVisible();
@@ -143,16 +143,16 @@ test('copy failure selects the JSON for manual copying and the creator fits mobi
 
 test('web creator offers registry polarity defaults rather than fixed UI assumptions',async({page})=>{
   await page.goto('/create');
-  await page.getByLabel('Peripheral type').selectOption('button');
+  await page.getByLabel('Device type').selectOption('button');
   await expect(page.getByLabel('Active low',{exact:true})).toBeChecked();
   await page.getByRole('button',{name:'Add device',exact:true}).click();
   const config=ProjectCreatorConfigSchema.parse(JSON.parse(await page.getByLabel('Project JSON',{exact:true}).inputValue()));
   expect(config.manifest.devices[0]).toMatchObject({type:'button',activeLow:true});
-  await page.getByLabel('Peripheral type').selectOption('switch');
+  await page.getByLabel('Device type').selectOption('switch');
   await expect(page.getByLabel('Active low',{exact:true})).not.toBeChecked();
-  await page.getByLabel('Peripheral type').selectOption('a3144');
+  await page.getByLabel('Device type').selectOption('a3144');
   await expect(page.getByLabel('Active low',{exact:true})).toBeChecked();
-  await page.getByLabel('Peripheral type').selectOption('ky_038');
+  await page.getByLabel('Device type').selectOption('ky_038');
   await expect(page.getByLabel('Active low',{exact:true})).not.toBeChecked();
 });
 
@@ -177,7 +177,7 @@ test('moving or removing a shared probe preserves the driving switch', async ({ 
 test('drafts at the size limit survive reload and oversized edits leave them intact', async ({ page }) => {
   await page.goto('/create');
   await page.getByRole('button', { name: 'Add device', exact: true }).click();
-  await page.getByText('Advanced circuit configuration', { exact: true }).click();
+  await page.getByText('Edit the circuit as JSON', { exact: true }).click();
   const field = page.getByLabel('Circuit JSON', { exact: true });
   const valid = await field.inputValue();
   const limit = 1024 * 1024;
@@ -187,7 +187,7 @@ test('drafts at the size limit survive reload and oversized edits leave them int
   await expect(page.getByRole('alert')).toContainText('previous draft is unchanged');
   expect((await field.inputValue()).length).toBe(limit);
   await page.reload();
-  await page.getByText('Advanced circuit configuration', { exact: true }).click();
+  await page.getByText('Edit the circuit as JSON', { exact: true }).click();
   expect((await field.inputValue()).length).toBe(limit);
   await expect(page.getByRole('button', { name: 'Edit led_1' })).toBeVisible();
 });
@@ -203,10 +203,10 @@ test('demo device removal cannot export a configuration that breaks bundled firm
 
 test('web creator exports matrix wiring with distinct free output pins',async({page},info)=>{
   await page.goto('/create');
-  await page.getByLabel('Peripheral type').selectOption('max7219');
+  await page.getByLabel('Device type').selectOption('max7219');
   await expect(page.getByLabel('Active low',{exact:true})).toHaveCount(0);
   for(const signal of ['DIN','CLK','LOAD'])await expect(page.getByLabel(`${signal} GPIO`).locator('option[value="34"]')).toHaveCount(0);
-  await page.getByLabel('Instance id').fill('display');
+  await page.getByLabel('Device id').fill('display');
   await page.getByLabel('Module count').fill('4');
   await page.getByLabel('LED color').selectOption('amber');
   await page.getByRole('button',{name:'Add device',exact:true}).click();
@@ -217,7 +217,7 @@ test('web creator exports matrix wiring with distinct free output pins',async({p
   expect(device).toMatchObject({id:'display',length:4,color:'amber',activeLow:false});
   expect(new Set([device.din,device.clk,device.load]).size).toBe(3);
   await expect(page.getByLabel('DIN GPIO').locator(`option[value="${device.din}"]`)).toHaveCount(0);
-  await page.getByLabel('Peripheral type').selectOption('led');
+  await page.getByLabel('Device type').selectOption('led');
   for(const pin of [device.din,device.clk,device.load])await expect(page.getByLabel('GPIO pin').locator(`option[value="${pin}"]`)).toHaveCount(0);
   for(const width of [1440,375,320]){
     await page.setViewportSize({width,height:812});
@@ -226,7 +226,7 @@ test('web creator exports matrix wiring with distinct free output pins',async({p
   }
 });
 
-test('setup-project.sh --web lets the page pick the project name and location like a new-project wizard', async ({ page }, info) => {
+test('espemu new --web lets the page pick the project name and location like a new-project wizard', async ({ page }, info) => {
   const parent = mkdtempSync(join(tmpdir(), 'espemu-web-e2e-'));
   mkdirSync(join(parent, 'workspace', 'boards'), { recursive: true });
   const location = realpathSync(parent);
@@ -241,11 +241,12 @@ test('setup-project.sh --web lets the page pick the project name and location li
     page.on('dialog', dialog => void dialog.accept());
     await page.goto(/http:\/\/127\.0\.0\.1:\d+\/create#session=[0-9a-f]+/.exec(output)![0]);
     const card = page.getByRole('region', { name: 'New project' });
+    const finish = page.getByRole('region', { name: 'Create project' });
     await expect(card.getByLabel('Project name')).toHaveValue('my_project');
     await expect(card.locator('[data-project-path]')).toHaveText(`Creates ${join(location, 'my_project')}`);
     await card.getByLabel('Project name').fill('../bad');
     await expect(card.getByRole('alert')).toContainText('project name');
-    await expect(card.getByRole('button', { name: 'Create project' })).toBeDisabled();
+    await expect(finish.getByRole('button', { name: 'Create project' })).toBeDisabled();
     await card.getByLabel('Project name').fill('web_blinky');
     await card.getByLabel('Use default location').uncheck();
     await card.getByRole('button', { name: 'Browse…' }).click();
@@ -262,8 +263,13 @@ test('setup-project.sh --web lets the page pick the project name and location li
     await page.getByLabel('Starter').selectOption('blinky');
     expect(existsSync(join(location, 'workspace', 'web_blinky'))).toBe(false);
     await page.screenshot({ path: info.outputPath('web-setup-desktop.png'), fullPage: true });
-    await card.getByRole('button', { name: 'Create project' }).click();
-    await expect(page.getByRole('region', { name: 'New project' }).getByRole('status')).toContainText(join(location, 'workspace', 'web_blinky'));
+    const devices = await page.getByRole('heading', { name: 'Devices' }).boundingBox();
+    const button = await finish.getByRole('button', { name: 'Create project' }).boundingBox();
+    expect(button!.y).toBeGreaterThan(devices!.y);
+    await expect(page.getByRole('button', { name: 'Copy JSON' })).toHaveCount(0);
+    await expect(finish).toContainText(`Creates ${join(location, 'workspace', 'web_blinky')}`);
+    await finish.getByRole('button', { name: 'Create project' }).click();
+    await expect(finish.getByRole('status')).toContainText(join(location, 'workspace', 'web_blinky'));
     expect(await exited).toBe(0);
     expect(readFileSync(join(location, 'workspace', 'web_blinky', 'main/main.c'), 'utf8')).toMatch(/BLINK_INTERVAL_MS 500/);
     expect(output).toMatch(/Created .*web_blinky/);

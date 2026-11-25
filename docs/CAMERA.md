@@ -85,7 +85,7 @@ await project.waitFor(state => state.camera.framesDelivered > 0);
 The [camera integration test](../tests/project-creator-integration.test.ts) and the [browser test](../e2e/camera.spec.ts) cover the whole path. The browser test feeds Chromium's synthetic webcam into a fixture whose firmware decodes every JPEG it captures:
 
 ```sh
-bash tools/setup-project.sh /tmp/camera --config tests/fixtures/camera/project-config.json
+espemu new /tmp/camera --config tests/fixtures/camera/project-config.json
 cp tests/fixtures/camera/main.c /tmp/camera/main/main.c
 make -C /tmp/camera build
 CAMERA_PROJECT=/tmp/camera npx playwright test --config playwright.camera.config.ts

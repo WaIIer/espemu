@@ -23,17 +23,17 @@ A project without a manifest has no devices. ESPEmu never adds a manifest to an 
 
 ## Create projects
 
-`espemu new` in a package, or `bash tools/setup-project.sh` in a checkout, creates projects in three ways.
+`espemu new` creates projects in three ways.
 
 The guided creator runs with no arguments or with `--guided`. It asks one question at a time and validates each answer against the registry. It covers the starter application, devices and wiring, initial inputs and scenarios. It writes nothing until you confirm the summary, and it asks again before building or running. An empty starter stays empty. The blinky starter adds GPIO code only because you chose it.
 
-The browser creator runs with `--web`. Its **New project** card asks for the project name and a location. The location defaults to the current folder, and **Browse…** opens a folder picker. A live check shows the folder that will be created and refuses a folder that is not empty. **Create project** uses the same validation and file generation as a configuration file. A directory argument fills in the name and location. The command prints a URL with a session token. The token protects folder browsing and creation, and it stops working when the command exits.
+The browser creator runs with `--web`. Its **New project** card at the top asks for the project name and a location. The location defaults to the current folder, and **Browse…** opens a folder picker. A live check shows the folder that will be created and refuses a folder that is not empty. After the starter and the devices, the **Create project** card at the end of the page creates the project. It uses the same validation and file generation as a configuration file. A directory argument fills in the name and location. The command prints a URL with a session token. The token protects folder browsing and creation, and it stops working when the command exits.
 
-The creator also runs without a backend: `npm run creator` serves it, and the workbench links to it. That version cannot create files. It saves a draft in the browser and can download or copy the project configuration. Pass that file to the setup command:
+The workbench's **Create project** link opens the same page without a session. That version cannot create files. It saves a draft in the browser and can download or copy the project configuration. Pass that file to `espemu new`:
 
 ```sh
-bash tools/setup-project.sh my_project --config project-config.json
-bash tools/setup-project.sh my_project --config-json '{"v":1,"starter":"empty","language":"c","manifest":{"v":1,"target":"esp32"}}'
+espemu new my_project --config project-config.json
+espemu new my_project --config-json '{"v":1,"starter":"empty","language":"c","manifest":{"v":1,"target":"esp32"}}'
 ```
 
 `--config -` reads the configuration from standard input. `shared/project-creator.ts` validates it. The configuration has these fields:
@@ -64,7 +64,7 @@ Open the generated project folder in VS Code. If Docker and the Dev Containers e
 - `make doctor` checks the tools and reports the project's firmware and emulator. In a checkout, `ESPEMU_DOCTOR_PROFILE=--native make doctor` also checks the native build tools.
 - `make add_component` adds one device without touching your source or edited documentation, and without building. `DEVICE=TYPE make add_component` or `DEVICE=JSON make add_component` skips the questions.
 - `make docs` regenerates `ESPEMU-DEVICES.md` and the packaged drivers. It leaves a README you edited alone.
-- `bash tools/setup-project.sh PROJECT --makefile-only` updates a Makefile that an older ESPEmu generated. It leaves custom Makefiles alone.
+- `espemu new PROJECT --makefile-only` updates a Makefile that an older ESPEmu generated. It leaves custom Makefiles alone.
 
 On a wide screen, the workbench's console dock shows Serial, Events or both next to the active view. On a narrow screen the dock sits below it. Both consoles follow new entries. Turn Follow off to scroll back while entries keep arriving.
 
@@ -110,7 +110,7 @@ Choosing devices, adding instances at free addresses and changing wiring, inputs
 - One OV2640 camera on ESP32-CAM wiring, fed from the browser webcam or a test pattern. [CAMERA.md](CAMERA.md) has the details.
 - Twenty digital modules: HC-SR501, HC-SR505, RCWL-0516, TTP223, A3144, SS451A, SW-520D, SW-420, KY-032, KY-026, FC-37, YL-69, MQ-2, MQ-135, KY-038, ST188 DOUT, Littelfuse 59170, SN04-N, LJ12A3-4-Z/BX and E18-D80NK.
 
-The LCD and speaker browser test runs against the `tests/fixtures/speaker-lcd` project. Build that project with `bash tools/setup-project.sh DIR --config tests/fixtures/speaker-lcd/project-config.json`, copy in its `main.c`, then run `SPEAKER_LCD_PROJECT=DIR npx playwright test --config playwright.speaker-lcd.config.ts`.
+The LCD and speaker browser test runs against the `tests/fixtures/speaker-lcd` project. Build that project with `espemu new DIR --config tests/fixtures/speaker-lcd/project-config.json`, copy in its `main.c`, then run `SPEAKER_LCD_PROJECT=DIR npx playwright test --config playwright.speaker-lcd.config.ts`.
 
 ### Digital modules
 

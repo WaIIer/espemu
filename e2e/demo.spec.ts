@@ -27,7 +27,7 @@ test('active demo wiring stays fixed while dragging the gyro reaches real firmwa
   await page.goto('/');await expect(page.getByRole('button',{name:'pause',exact:true})).toBeEnabled();
   const original=await(await page.request.get('/api/topology')).json();
   await expect(page.locator('input[type=file]')).toHaveCount(0);
-  const panel=page.getByRole('region',{name:'GPIO peripherals'});
+  const panel=page.getByRole('region',{name:'GPIO devices'});
   await expect(panel.getByRole('combobox')).toHaveCount(0);await expect(panel.getByRole('spinbutton')).toHaveCount(0);await expect(panel.getByRole('textbox')).toHaveCount(0);
   await expect(page.getByRole('group',{name:'WS2812 strip pixels',exact:true}).getByRole('img')).toHaveCount(8);
   const canvas=page.locator('canvas[data-gyro-id="mpu6050"]');

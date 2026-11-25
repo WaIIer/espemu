@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { PERIPHERAL_REGISTRY } from '../shared/registry';
 test('actual GPIO circuit displays firmware LEDs/RGB and browser button reaches firmware without telemetry',async({page},info)=>{
   await page.setViewportSize({width:1440,height:1000});await page.goto('/');
-  await expect(page.getByRole('region',{name:'GPIO peripherals'})).toBeVisible();
+  await expect(page.getByRole('region',{name:'GPIO devices'})).toBeVisible();
   const led=page.getByRole('article',{name:'Blink LED peripheral'}).getByRole('img');
   await expect(led).toHaveAttribute('aria-label','Blink LED on');await expect(led).toHaveAttribute('aria-label','Blink LED off');
   const button=page.getByRole('button',{name:'Press Button',exact:true});await button.hover();await page.mouse.down();
@@ -19,11 +19,11 @@ test('actual GPIO circuit displays firmware LEDs/RGB and browser button reaches 
 });
 test('active runs show fixed wiring without project editing controls',async({page})=>{
   await page.goto('/');await expect(page.getByRole('button',{name:'pause',exact:true})).toBeEnabled();
-  const panel=page.getByRole('region',{name:'GPIO peripherals'});
+  const panel=page.getByRole('region',{name:'GPIO devices'});
   await expect(panel.getByRole('combobox')).toHaveCount(0);
   await expect(panel.getByRole('textbox')).toHaveCount(0);
   await expect(panel.getByRole('spinbutton')).toHaveCount(0);
-  await expect(page.getByRole('button',{name:'Add peripheral',exact:true})).toHaveCount(0);
+  await expect(page.getByRole('button',{name:'Add device',exact:true})).toHaveCount(0);
   await expect(page.getByRole('button',{name:/Remove|Import/})).toHaveCount(0);
   await expect(page.locator('input[type=file]')).toHaveCount(0);
   const original=await(await page.request.get('/api/topology')).json();
