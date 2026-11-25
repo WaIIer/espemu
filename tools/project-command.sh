@@ -24,6 +24,9 @@ case "$COMMAND" in
     docs|editor)
         exec bash "$ROOT/tools/generate-project-artifacts.sh" "$PROJECT_DIR"
         ;;
+    kicad)
+        exec bash "$ROOT/tools/generate-project-artifacts.sh" "$PROJECT_DIR" --kicad
+        ;;
     build)
         prepare native
         exec bash "$ROOT/tools/build-firmware.sh" "$PROJECT_DIR"

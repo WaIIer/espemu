@@ -93,6 +93,8 @@ $TOOL_VERSIONS
   (python-build-standalone, PSF-2.0; toolchain/python), CMake and Ninja (toolchain/build-env).
 - npm packages in node_modules, each with its own license file.
 - Bosch Sensortec BME280 driver, BSD-3-Clause (firmware/components/bme280/vendor).
+- Selected KiCad community symbols 7.0.11, CC-BY-SA-4.0 with the electronic-design
+  exception (tools/kicad/LICENSE.kicad-symbols).
 EOF
 chmod -R u+rwX,go+rX,go-w "$PREFIX"
 

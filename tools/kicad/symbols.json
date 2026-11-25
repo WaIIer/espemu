@@ -1,0 +1,986 @@
+{
+  "Sensor:BME280": {
+    "symbol": "(symbol \"BME280\" (in_bom yes) (on_board yes)\n    (property \"Reference\" \"U\" (at -8.89 11.43 0)\n      (effects (font (size 1.27 1.27)))\n    )\n    (property \"Value\" \"BME280\" (at 7.62 11.43 0)\n      (effects (font (size 1.27 1.27)))\n    )\n    (property \"Footprint\" \"Package_LGA:Bosch_LGA-8_2.5x2.5mm_P0.65mm_ClockwisePinNumbering\" (at 38.1 -11.43 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"Datasheet\" \"https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bme280-ds002.pdf\" (at 0 -5.08 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"ki_keywords\" \"Bosch pressure humidity temperature environment environmental measurement digital\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"ki_description\" \"3-in-1 sensor, humidity, pressure, temperature, I2C and SPI interface, 1.71-3.6V, LGA-8\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"ki_fp_filters\" \"*LGA*2.5x2.5mm*P0.65mm*Clockwise*\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (symbol \"BME280_0_1\"\n      (rectangle (start -10.16 10.16) (end 10.16 -10.16)\n        (stroke (width 0.254) (type default))\n        (fill (type background))\n      )\n    )\n    (symbol \"BME280_1_1\"\n      (pin power_in line (at -2.54 -15.24 90) (length 5.08)\n        (name \"GND\" (effects (font (size 1.27 1.27))))\n        (number \"1\" (effects (font (size 1.27 1.27))))\n      )\n      (pin input line (at 15.24 -7.62 180) (length 5.08)\n        (name \"CSB\" (effects (font (size 1.27 1.27))))\n        (number \"2\" (effects (font (size 1.27 1.27))))\n      )\n      (pin bidirectional line (at 15.24 -2.54 180) (length 5.08)\n        (name \"SDI\" (effects (font (size 1.27 1.27))))\n        (number \"3\" (effects (font (size 1.27 1.27))))\n      )\n      (pin input line (at 15.24 2.54 180) (length 5.08)\n        (name \"SCK\" (effects (font (size 1.27 1.27))))\n        (number \"4\" (effects (font (size 1.27 1.27))))\n      )\n      (pin bidirectional line (at 15.24 7.62 180) (length 5.08)\n        (name \"SDO\" (effects (font (size 1.27 1.27))))\n        (number \"5\" (effects (font (size 1.27 1.27))))\n      )\n      (pin power_in line (at -2.54 15.24 270) (length 5.08)\n        (name \"VDDIO\" (effects (font (size 1.27 1.27))))\n        (number \"6\" (effects (font (size 1.27 1.27))))\n      )\n      (pin power_in line (at 2.54 -15.24 90) (length 5.08)\n        (name \"GND\" (effects (font (size 1.27 1.27))))\n        (number \"7\" (effects (font (size 1.27 1.27))))\n      )\n      (pin power_in line (at 2.54 15.24 270) (length 5.08)\n        (name \"VDD\" (effects (font (size 1.27 1.27))))\n        (number \"8\" (effects (font (size 1.27 1.27))))\n      )\n    )\n  )",
+    "pins": [
+      {
+        "number": "1",
+        "name": "GND",
+        "type": "power_in",
+        "x": -2.54,
+        "y": -15.24,
+        "angle": 90
+      },
+      {
+        "number": "2",
+        "name": "CSB",
+        "type": "input",
+        "x": 15.24,
+        "y": -7.62,
+        "angle": 180
+      },
+      {
+        "number": "3",
+        "name": "SDI",
+        "type": "bidirectional",
+        "x": 15.24,
+        "y": -2.54,
+        "angle": 180
+      },
+      {
+        "number": "4",
+        "name": "SCK",
+        "type": "input",
+        "x": 15.24,
+        "y": 2.54,
+        "angle": 180
+      },
+      {
+        "number": "5",
+        "name": "SDO",
+        "type": "bidirectional",
+        "x": 15.24,
+        "y": 7.62,
+        "angle": 180
+      },
+      {
+        "number": "6",
+        "name": "VDDIO",
+        "type": "power_in",
+        "x": -2.54,
+        "y": 15.24,
+        "angle": 270
+      },
+      {
+        "number": "7",
+        "name": "GND",
+        "type": "power_in",
+        "x": 2.54,
+        "y": -15.24,
+        "angle": 90
+      },
+      {
+        "number": "8",
+        "name": "VDD",
+        "type": "power_in",
+        "x": 2.54,
+        "y": 15.24,
+        "angle": 270
+      }
+    ],
+    "reference": "U",
+    "footprint": "Package_LGA:Bosch_LGA-8_2.5x2.5mm_P0.65mm_ClockwisePinNumbering",
+    "datasheet": "https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bme280-ds002.pdf"
+  },
+  "Sensor_Humidity:SHT31-DIS": {
+    "symbol": "(symbol \"SHT31-DIS\" (in_bom yes) (on_board yes)\n    (property \"Reference\" \"U\" (at -6.35 6.35 0)\n      (effects (font (size 1.27 1.27)))\n    )\n    (property \"Value\" \"SHT31-DIS\" (at 6.35 6.35 0)\n      (effects (font (size 1.27 1.27)))\n    )\n    (property \"Footprint\" \"Sensor_Humidity:Sensirion_DFN-8-1EP_2.5x2.5mm_P0.5mm_EP1.1x1.7mm\" (at 0 1.27 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"Datasheet\" \"https://www.sensirion.com/fileadmin/user_upload/customers/sensirion/Dokumente/2_Humidity_Sensors/Datasheets/Sensirion_Humidity_Sensors_SHT3x_Datasheet_digital.pdf\" (at 0 1.27 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"ki_keywords\" \"digital temperature humidity i2c\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"ki_description\" \"I\u00b2C humidity and temperature sensor, \u00b12%RH, \u00b10.2\u00b0C, DFN-8\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"ki_fp_filters\" \"Sensirion*DFN*1EP*2.5x2.5mm*P0.5mm*\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (symbol \"SHT31-DIS_0_1\"\n      (rectangle (start -7.62 5.08) (end 7.62 -5.08)\n        (stroke (width 0.254) (type default))\n        (fill (type background))\n      )\n    )\n    (symbol \"SHT31-DIS_1_1\"\n      (pin bidirectional line (at 10.16 2.54 180) (length 2.54)\n        (name \"SDA\" (effects (font (size 1.27 1.27))))\n        (number \"1\" (effects (font (size 1.27 1.27))))\n      )\n      (pin input line (at -10.16 2.54 0) (length 2.54)\n        (name \"ADDR\" (effects (font (size 1.27 1.27))))\n        (number \"2\" (effects (font (size 1.27 1.27))))\n      )\n      (pin output line (at 10.16 -2.54 180) (length 2.54)\n        (name \"ALERT\" (effects (font (size 1.27 1.27))))\n        (number \"3\" (effects (font (size 1.27 1.27))))\n      )\n      (pin input line (at 10.16 0 180) (length 2.54)\n        (name \"SCL\" (effects (font (size 1.27 1.27))))\n        (number \"4\" (effects (font (size 1.27 1.27))))\n      )\n      (pin power_in line (at 0 7.62 270) (length 2.54)\n        (name \"VDD\" (effects (font (size 1.27 1.27))))\n        (number \"5\" (effects (font (size 1.27 1.27))))\n      )\n      (pin input line (at -10.16 0 0) (length 2.54)\n        (name \"~{RESET}\" (effects (font (size 1.27 1.27))))\n        (number \"6\" (effects (font (size 1.27 1.27))))\n      )\n      (pin passive line (at -10.16 -2.54 0) (length 2.54)\n        (name \"R\" (effects (font (size 1.27 1.27))))\n        (number \"7\" (effects (font (size 1.27 1.27))))\n      )\n      (pin power_in line (at 0 -7.62 90) (length 2.54)\n        (name \"VSS\" (effects (font (size 1.27 1.27))))\n        (number \"8\" (effects (font (size 1.27 1.27))))\n      )\n      (pin passive line (at 0 -7.62 90) (length 2.54) hide\n        (name \"VSS\" (effects (font (size 1.27 1.27))))\n        (number \"9\" (effects (font (size 1.27 1.27))))\n      )\n    )\n  )",
+    "pins": [
+      {
+        "number": "1",
+        "name": "SDA",
+        "type": "bidirectional",
+        "x": 10.16,
+        "y": 2.54,
+        "angle": 180
+      },
+      {
+        "number": "2",
+        "name": "ADDR",
+        "type": "input",
+        "x": -10.16,
+        "y": 2.54,
+        "angle": 0
+      },
+      {
+        "number": "3",
+        "name": "ALERT",
+        "type": "output",
+        "x": 10.16,
+        "y": -2.54,
+        "angle": 180
+      },
+      {
+        "number": "4",
+        "name": "SCL",
+        "type": "input",
+        "x": 10.16,
+        "y": 0.0,
+        "angle": 180
+      },
+      {
+        "number": "5",
+        "name": "VDD",
+        "type": "power_in",
+        "x": 0.0,
+        "y": 7.62,
+        "angle": 270
+      },
+      {
+        "number": "6",
+        "name": "~{RESET}",
+        "type": "input",
+        "x": -10.16,
+        "y": 0.0,
+        "angle": 0
+      },
+      {
+        "number": "7",
+        "name": "R",
+        "type": "passive",
+        "x": -10.16,
+        "y": -2.54,
+        "angle": 0
+      },
+      {
+        "number": "8",
+        "name": "VSS",
+        "type": "power_in",
+        "x": 0.0,
+        "y": -7.62,
+        "angle": 90
+      },
+      {
+        "number": "9",
+        "name": "VSS",
+        "type": "passive",
+        "x": 0.0,
+        "y": -7.62,
+        "angle": 90
+      }
+    ],
+    "reference": "U",
+    "footprint": "Sensor_Humidity:Sensirion_DFN-8-1EP_2.5x2.5mm_P0.5mm_EP1.1x1.7mm",
+    "datasheet": "https://www.sensirion.com/fileadmin/user_upload/customers/sensirion/Dokumente/2_Humidity_Sensors/Datasheets/Sensirion_Humidity_Sensors_SHT3x_Datasheet_digital.pdf"
+  },
+  "Sensor_Motion:MPU-6050": {
+    "symbol": "(symbol \"MPU-6050\" (in_bom yes) (on_board yes)\n    (property \"Reference\" \"U\" (at -11.43 13.97 0)\n      (effects (font (size 1.27 1.27)))\n    )\n    (property \"Value\" \"MPU-6050\" (at 7.62 -15.24 0)\n      (effects (font (size 1.27 1.27)))\n    )\n    (property \"Footprint\" \"Sensor_Motion:InvenSense_QFN-24_4x4mm_P0.5mm\" (at 0 -20.32 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"Datasheet\" \"https://invensense.tdk.com/wp-content/uploads/2015/02/MPU-6000-Datasheet1.pdf\" (at 0 -3.81 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"ki_keywords\" \"mems\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"ki_description\" \"InvenSense 6-Axis Motion Sensor, Gyroscope, Accelerometer, I2C\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"ki_fp_filters\" \"*QFN*4x4mm*P0.5mm*\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (symbol \"MPU-6050_0_0\"\n      (text \"\" (at 12.7 -2.54 0)\n        (effects (font (size 1.27 1.27)))\n      )\n    )\n    (symbol \"MPU-6050_0_1\"\n      (rectangle (start -12.7 13.97) (end 12.7 -13.97)\n        (stroke (width 0.254) (type default))\n        (fill (type background))\n      )\n    )\n    (symbol \"MPU-6050_1_1\"\n      (pin input clock (at -17.78 -7.62 0) (length 5.08)\n        (name \"CLKIN\" (effects (font (size 1.27 1.27))))\n        (number \"1\" (effects (font (size 1.27 1.27))))\n      )\n      (pin passive line (at 17.78 -7.62 180) (length 5.08)\n        (name \"REGOUT\" (effects (font (size 1.27 1.27))))\n        (number \"10\" (effects (font (size 1.27 1.27))))\n      )\n      (pin input line (at -17.78 -5.08 0) (length 5.08)\n        (name \"FSYNC\" (effects (font (size 1.27 1.27))))\n        (number \"11\" (effects (font (size 1.27 1.27))))\n      )\n      (pin output line (at 17.78 7.62 180) (length 5.08)\n        (name \"INT\" (effects (font (size 1.27 1.27))))\n        (number \"12\" (effects (font (size 1.27 1.27))))\n      )\n      (pin power_in line (at 2.54 17.78 270) (length 3.81)\n        (name \"VDD\" (effects (font (size 1.27 1.27))))\n        (number \"13\" (effects (font (size 1.27 1.27))))\n      )\n      (pin no_connect line (at -12.7 -10.16 0) (length 2.54) hide\n        (name \"NC\" (effects (font (size 1.27 1.27))))\n        (number \"14\" (effects (font (size 1.27 1.27))))\n      )\n      (pin no_connect line (at 12.7 12.7 180) (length 2.54) hide\n        (name \"NC\" (effects (font (size 1.27 1.27))))\n        (number \"15\" (effects (font (size 1.27 1.27))))\n      )\n      (pin no_connect line (at 12.7 10.16 180) (length 2.54) hide\n        (name \"NC\" (effects (font (size 1.27 1.27))))\n        (number \"16\" (effects (font (size 1.27 1.27))))\n      )\n      (pin no_connect line (at 12.7 5.08 180) (length 2.54) hide\n        (name \"NC\" (effects (font (size 1.27 1.27))))\n        (number \"17\" (effects (font (size 1.27 1.27))))\n      )\n      (pin power_in line (at 0 -17.78 90) (length 3.81)\n        (name \"GND\" (effects (font (size 1.27 1.27))))\n        (number \"18\" (effects (font (size 1.27 1.27))))\n      )\n      (pin no_connect line (at 12.7 -10.16 180) (length 2.54) hide\n        (name \"RESV\" (effects (font (size 1.27 1.27))))\n        (number \"19\" (effects (font (size 1.27 1.27))))\n      )\n      (pin no_connect line (at -12.7 12.7 0) (length 2.54) hide\n        (name \"NC\" (effects (font (size 1.27 1.27))))\n        (number \"2\" (effects (font (size 1.27 1.27))))\n      )\n      (pin passive line (at 17.78 -5.08 180) (length 5.08)\n        (name \"CPOUT\" (effects (font (size 1.27 1.27))))\n        (number \"20\" (effects (font (size 1.27 1.27))))\n      )\n      (pin no_connect line (at 12.7 -2.54 180) (length 2.54) hide\n        (name \"RESV\" (effects (font (size 1.27 1.27))))\n        (number \"21\" (effects (font (size 1.27 1.27))))\n      )\n      (pin no_connect line (at 12.7 -12.7 180) (length 2.54) hide\n        (name \"RESV\" (effects (font (size 1.27 1.27))))\n        (number \"22\" (effects (font (size 1.27 1.27))))\n      )\n      (pin input line (at -17.78 5.08 0) (length 5.08)\n        (name \"SCL\" (effects (font (size 1.27 1.27))))\n        (number \"23\" (effects (font (size 1.27 1.27))))\n      )\n      (pin bidirectional line (at -17.78 7.62 0) (length 5.08)\n        (name \"SDA\" (effects (font (size 1.27 1.27))))\n        (number \"24\" (effects (font (size 1.27 1.27))))\n      )\n      (pin no_connect line (at -12.7 10.16 0) (length 2.54) hide\n        (name \"NC\" (effects (font (size 1.27 1.27))))\n        (number \"3\" (effects (font (size 1.27 1.27))))\n      )\n      (pin no_connect line (at -12.7 0 0) (length 2.54) hide\n        (name \"NC\" (effects (font (size 1.27 1.27))))\n        (number \"4\" (effects (font (size 1.27 1.27))))\n      )\n      (pin no_connect line (at -12.7 -2.54 0) (length 2.54) hide\n        (name \"NC\" (effects (font (size 1.27 1.27))))\n        (number \"5\" (effects (font (size 1.27 1.27))))\n      )\n      (pin bidirectional line (at 17.78 2.54 180) (length 5.08)\n        (name \"AUX_DA\" (effects (font (size 1.27 1.27))))\n        (number \"6\" (effects (font (size 1.27 1.27))))\n      )\n      (pin output clock (at 17.78 0 180) (length 5.08)\n        (name \"AUX_CL\" (effects (font (size 1.27 1.27))))\n        (number \"7\" (effects (font (size 1.27 1.27))))\n      )\n      (pin power_in line (at -2.54 17.78 270) (length 3.81)\n        (name \"VLOGIC\" (effects (font (size 1.27 1.27))))\n        (number \"8\" (effects (font (size 1.27 1.27))))\n      )\n      (pin input line (at -17.78 2.54 0) (length 5.08)\n        (name \"AD0\" (effects (font (size 1.27 1.27))))\n        (number \"9\" (effects (font (size 1.27 1.27))))\n      )\n    )\n  )",
+    "pins": [
+      {
+        "number": "1",
+        "name": "CLKIN",
+        "type": "input",
+        "x": -17.78,
+        "y": -7.62,
+        "angle": 0
+      },
+      {
+        "number": "10",
+        "name": "REGOUT",
+        "type": "passive",
+        "x": 17.78,
+        "y": -7.62,
+        "angle": 180
+      },
+      {
+        "number": "11",
+        "name": "FSYNC",
+        "type": "input",
+        "x": -17.78,
+        "y": -5.08,
+        "angle": 0
+      },
+      {
+        "number": "12",
+        "name": "INT",
+        "type": "output",
+        "x": 17.78,
+        "y": 7.62,
+        "angle": 180
+      },
+      {
+        "number": "13",
+        "name": "VDD",
+        "type": "power_in",
+        "x": 2.54,
+        "y": 17.78,
+        "angle": 270
+      },
+      {
+        "number": "14",
+        "name": "NC",
+        "type": "no_connect",
+        "x": -12.7,
+        "y": -10.16,
+        "angle": 0
+      },
+      {
+        "number": "15",
+        "name": "NC",
+        "type": "no_connect",
+        "x": 12.7,
+        "y": 12.7,
+        "angle": 180
+      },
+      {
+        "number": "16",
+        "name": "NC",
+        "type": "no_connect",
+        "x": 12.7,
+        "y": 10.16,
+        "angle": 180
+      },
+      {
+        "number": "17",
+        "name": "NC",
+        "type": "no_connect",
+        "x": 12.7,
+        "y": 5.08,
+        "angle": 180
+      },
+      {
+        "number": "18",
+        "name": "GND",
+        "type": "power_in",
+        "x": 0.0,
+        "y": -17.78,
+        "angle": 90
+      },
+      {
+        "number": "19",
+        "name": "RESV",
+        "type": "no_connect",
+        "x": 12.7,
+        "y": -10.16,
+        "angle": 180
+      },
+      {
+        "number": "2",
+        "name": "NC",
+        "type": "no_connect",
+        "x": -12.7,
+        "y": 12.7,
+        "angle": 0
+      },
+      {
+        "number": "20",
+        "name": "CPOUT",
+        "type": "passive",
+        "x": 17.78,
+        "y": -5.08,
+        "angle": 180
+      },
+      {
+        "number": "21",
+        "name": "RESV",
+        "type": "no_connect",
+        "x": 12.7,
+        "y": -2.54,
+        "angle": 180
+      },
+      {
+        "number": "22",
+        "name": "RESV",
+        "type": "no_connect",
+        "x": 12.7,
+        "y": -12.7,
+        "angle": 180
+      },
+      {
+        "number": "23",
+        "name": "SCL",
+        "type": "input",
+        "x": -17.78,
+        "y": 5.08,
+        "angle": 0
+      },
+      {
+        "number": "24",
+        "name": "SDA",
+        "type": "bidirectional",
+        "x": -17.78,
+        "y": 7.62,
+        "angle": 0
+      },
+      {
+        "number": "3",
+        "name": "NC",
+        "type": "no_connect",
+        "x": -12.7,
+        "y": 10.16,
+        "angle": 0
+      },
+      {
+        "number": "4",
+        "name": "NC",
+        "type": "no_connect",
+        "x": -12.7,
+        "y": 0.0,
+        "angle": 0
+      },
+      {
+        "number": "5",
+        "name": "NC",
+        "type": "no_connect",
+        "x": -12.7,
+        "y": -2.54,
+        "angle": 0
+      },
+      {
+        "number": "6",
+        "name": "AUX_DA",
+        "type": "bidirectional",
+        "x": 17.78,
+        "y": 2.54,
+        "angle": 180
+      },
+      {
+        "number": "7",
+        "name": "AUX_CL",
+        "type": "output",
+        "x": 17.78,
+        "y": 0.0,
+        "angle": 180
+      },
+      {
+        "number": "8",
+        "name": "VLOGIC",
+        "type": "power_in",
+        "x": -2.54,
+        "y": 17.78,
+        "angle": 270
+      },
+      {
+        "number": "9",
+        "name": "AD0",
+        "type": "input",
+        "x": -17.78,
+        "y": 2.54,
+        "angle": 0
+      }
+    ],
+    "reference": "U",
+    "footprint": "Sensor_Motion:InvenSense_QFN-24_4x4mm_P0.5mm",
+    "datasheet": "https://invensense.tdk.com/wp-content/uploads/2015/02/MPU-6000-Datasheet1.pdf"
+  },
+  "RF_Module:ESP32-WROOM-32": {
+    "symbol": "(symbol \"ESP32-WROOM-32\" (in_bom yes) (on_board yes)\n    (property \"Reference\" \"U\" (at -12.7 34.29 0)\n      (effects (font (size 1.27 1.27)) (justify left))\n    )\n    (property \"Value\" \"ESP32-WROOM-32\" (at 1.27 34.29 0)\n      (effects (font (size 1.27 1.27)) (justify left))\n    )\n    (property \"Footprint\" \"RF_Module:ESP32-WROOM-32\" (at 0 -38.1 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"Datasheet\" \"https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32_datasheet_en.pdf\" (at -7.62 1.27 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"ki_keywords\" \"RF Radio BT ESP ESP32 Espressif onboard PCB antenna\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"ki_description\" \"RF Module, ESP32-D0WDQ6 SoC, Wi-Fi 802.11b/g/n, Bluetooth, BLE, 32-bit, 2.7-3.6V, onboard antenna, SMD\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"ki_fp_filters\" \"ESP32?WROOM?32*\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (symbol \"ESP32-WROOM-32_0_1\"\n      (rectangle (start -12.7 33.02) (end 12.7 -33.02)\n        (stroke (width 0.254) (type default))\n        (fill (type background))\n      )\n    )\n    (symbol \"ESP32-WROOM-32_1_1\"\n      (pin power_in line (at 0 -35.56 90) (length 2.54)\n        (name \"GND\" (effects (font (size 1.27 1.27))))\n        (number \"1\" (effects (font (size 1.27 1.27))))\n      )\n      (pin bidirectional line (at 15.24 -12.7 180) (length 2.54)\n        (name \"IO25\" (effects (font (size 1.27 1.27))))\n        (number \"10\" (effects (font (size 1.27 1.27))))\n      )\n      (pin bidirectional line (at 15.24 -15.24 180) (length 2.54)\n        (name \"IO26\" (effects (font (size 1.27 1.27))))\n        (number \"11\" (effects (font (size 1.27 1.27))))\n      )\n      (pin bidirectional line (at 15.24 -17.78 180) (length 2.54)\n        (name \"IO27\" (effects (font (size 1.27 1.27))))\n        (number \"12\" (effects (font (size 1.27 1.27))))\n      )\n      (pin bidirectional line (at 15.24 10.16 180) (length 2.54)\n        (name \"IO14\" (effects (font (size 1.27 1.27))))\n        (number \"13\" (effects (font (size 1.27 1.27))))\n      )\n      (pin bidirectional line (at 15.24 15.24 180) (length 2.54)\n        (name \"IO12\" (effects (font (size 1.27 1.27))))\n        (number \"14\" (effects (font (size 1.27 1.27))))\n      )\n      (pin passive line (at 0 -35.56 90) (length 2.54) hide\n        (name \"GND\" (effects (font (size 1.27 1.27))))\n        (number \"15\" (effects (font (size 1.27 1.27))))\n      )\n      (pin bidirectional line (at 15.24 12.7 180) (length 2.54)\n        (name \"IO13\" (effects (font (size 1.27 1.27))))\n        (number \"16\" (effects (font (size 1.27 1.27))))\n      )\n      (pin bidirectional line (at -15.24 -5.08 0) (length 2.54)\n        (name \"SHD/SD2\" (effects (font (size 1.27 1.27))))\n        (number \"17\" (effects (font (size 1.27 1.27))))\n      )\n      (pin bidirectional line (at -15.24 -7.62 0) (length 2.54)\n        (name \"SWP/SD3\" (effects (font (size 1.27 1.27))))\n        (number \"18\" (effects (font (size 1.27 1.27))))\n      )\n      (pin bidirectional line (at -15.24 -12.7 0) (length 2.54)\n        (name \"SCS/CMD\" (effects (font (size 1.27 1.27))))\n        (number \"19\" (effects (font (size 1.27 1.27))))\n      )\n      (pin power_in line (at 0 35.56 270) (length 2.54)\n        (name \"VDD\" (effects (font (size 1.27 1.27))))\n        (number \"2\" (effects (font (size 1.27 1.27))))\n      )\n      (pin bidirectional line (at -15.24 -10.16 0) (length 2.54)\n        (name \"SCK/CLK\" (effects (font (size 1.27 1.27))))\n        (number \"20\" (effects (font (size 1.27 1.27))))\n      )\n      (pin bidirectional line (at -15.24 0 0) (length 2.54)\n        (name \"SDO/SD0\" (effects (font (size 1.27 1.27))))\n        (number \"21\" (effects (font (size 1.27 1.27))))\n      )\n      (pin bidirectional line (at -15.24 -2.54 0) (length 2.54)\n        (name \"SDI/SD1\" (effects (font (size 1.27 1.27))))\n        (number \"22\" (effects (font (size 1.27 1.27))))\n      )\n      (pin bidirectional line (at 15.24 7.62 180) (length 2.54)\n        (name \"IO15\" (effects (font (size 1.27 1.27))))\n        (number \"23\" (effects (font (size 1.27 1.27))))\n      )\n      (pin bidirectional line (at 15.24 25.4 180) (length 2.54)\n        (name \"IO2\" (effects (font (size 1.27 1.27))))\n        (number \"24\" (effects (font (size 1.27 1.27))))\n      )\n      (pin bidirectional line (at 15.24 30.48 180) (length 2.54)\n        (name \"IO0\" (effects (font (size 1.27 1.27))))\n        (number \"25\" (effects (font (size 1.27 1.27))))\n      )\n      (pin bidirectional line (at 15.24 20.32 180) (length 2.54)\n        (name \"IO4\" (effects (font (size 1.27 1.27))))\n        (number \"26\" (effects (font (size 1.27 1.27))))\n      )\n      (pin bidirectional line (at 15.24 5.08 180) (length 2.54)\n        (name \"IO16\" (effects (font (size 1.27 1.27))))\n        (number \"27\" (effects (font (size 1.27 1.27))))\n      )\n      (pin bidirectional line (at 15.24 2.54 180) (length 2.54)\n        (name \"IO17\" (effects (font (size 1.27 1.27))))\n        (number \"28\" (effects (font (size 1.27 1.27))))\n      )\n      (pin bidirectional line (at 15.24 17.78 180) (length 2.54)\n        (name \"IO5\" (effects (font (size 1.27 1.27))))\n        (number \"29\" (effects (font (size 1.27 1.27))))\n      )\n      (pin input line (at -15.24 30.48 0) (length 2.54)\n        (name \"EN\" (effects (font (size 1.27 1.27))))\n        (number \"3\" (effects (font (size 1.27 1.27))))\n      )\n      (pin bidirectional line (at 15.24 0 180) (length 2.54)\n        (name \"IO18\" (effects (font (size 1.27 1.27))))\n        (number \"30\" (effects (font (size 1.27 1.27))))\n      )\n      (pin bidirectional line (at 15.24 -2.54 180) (length 2.54)\n        (name \"IO19\" (effects (font (size 1.27 1.27))))\n        (number \"31\" (effects (font (size 1.27 1.27))))\n      )\n      (pin no_connect line (at -12.7 -27.94 0) (length 2.54) hide\n        (name \"NC\" (effects (font (size 1.27 1.27))))\n        (number \"32\" (effects (font (size 1.27 1.27))))\n      )\n      (pin bidirectional line (at 15.24 -5.08 180) (length 2.54)\n        (name \"IO21\" (effects (font (size 1.27 1.27))))\n        (number \"33\" (effects (font (size 1.27 1.27))))\n      )\n      (pin bidirectional line (at 15.24 22.86 180) (length 2.54)\n        (name \"RXD0/IO3\" (effects (font (size 1.27 1.27))))\n        (number \"34\" (effects (font (size 1.27 1.27))))\n      )\n      (pin bidirectional line (at 15.24 27.94 180) (length 2.54)\n        (name \"TXD0/IO1\" (effects (font (size 1.27 1.27))))\n        (number \"35\" (effects (font (size 1.27 1.27))))\n      )\n      (pin bidirectional line (at 15.24 -7.62 180) (length 2.54)\n        (name \"IO22\" (effects (font (size 1.27 1.27))))\n        (number \"36\" (effects (font (size 1.27 1.27))))\n      )\n      (pin bidirectional line (at 15.24 -10.16 180) (length 2.54)\n        (name \"IO23\" (effects (font (size 1.27 1.27))))\n        (number \"37\" (effects (font (size 1.27 1.27))))\n      )\n      (pin passive line (at 0 -35.56 90) (length 2.54) hide\n        (name \"GND\" (effects (font (size 1.27 1.27))))\n        (number \"38\" (effects (font (size 1.27 1.27))))\n      )\n      (pin passive line (at 0 -35.56 90) (length 2.54) hide\n        (name \"GND\" (effects (font (size 1.27 1.27))))\n        (number \"39\" (effects (font (size 1.27 1.27))))\n      )\n      (pin input line (at -15.24 25.4 0) (length 2.54)\n        (name \"SENSOR_VP\" (effects (font (size 1.27 1.27))))\n        (number \"4\" (effects (font (size 1.27 1.27))))\n      )\n      (pin input line (at -15.24 22.86 0) (length 2.54)\n        (name \"SENSOR_VN\" (effects (font (size 1.27 1.27))))\n        (number \"5\" (effects (font (size 1.27 1.27))))\n      )\n      (pin input line (at 15.24 -25.4 180) (length 2.54)\n        (name \"IO34\" (effects (font (size 1.27 1.27))))\n        (number \"6\" (effects (font (size 1.27 1.27))))\n      )\n      (pin input line (at 15.24 -27.94 180) (length 2.54)\n        (name \"IO35\" (effects (font (size 1.27 1.27))))\n        (number \"7\" (effects (font (size 1.27 1.27))))\n      )\n      (pin bidirectional line (at 15.24 -20.32 180) (length 2.54)\n        (name \"IO32\" (effects (font (size 1.27 1.27))))\n        (number \"8\" (effects (font (size 1.27 1.27))))\n      )\n      (pin bidirectional line (at 15.24 -22.86 180) (length 2.54)\n        (name \"IO33\" (effects (font (size 1.27 1.27))))\n        (number \"9\" (effects (font (size 1.27 1.27))))\n      )\n    )\n  )",
+    "pins": [
+      {
+        "number": "1",
+        "name": "GND",
+        "type": "power_in",
+        "x": 0.0,
+        "y": -35.56,
+        "angle": 90
+      },
+      {
+        "number": "10",
+        "name": "IO25",
+        "type": "bidirectional",
+        "x": 15.24,
+        "y": -12.7,
+        "angle": 180
+      },
+      {
+        "number": "11",
+        "name": "IO26",
+        "type": "bidirectional",
+        "x": 15.24,
+        "y": -15.24,
+        "angle": 180
+      },
+      {
+        "number": "12",
+        "name": "IO27",
+        "type": "bidirectional",
+        "x": 15.24,
+        "y": -17.78,
+        "angle": 180
+      },
+      {
+        "number": "13",
+        "name": "IO14",
+        "type": "bidirectional",
+        "x": 15.24,
+        "y": 10.16,
+        "angle": 180
+      },
+      {
+        "number": "14",
+        "name": "IO12",
+        "type": "bidirectional",
+        "x": 15.24,
+        "y": 15.24,
+        "angle": 180
+      },
+      {
+        "number": "15",
+        "name": "GND",
+        "type": "passive",
+        "x": 0.0,
+        "y": -35.56,
+        "angle": 90
+      },
+      {
+        "number": "16",
+        "name": "IO13",
+        "type": "bidirectional",
+        "x": 15.24,
+        "y": 12.7,
+        "angle": 180
+      },
+      {
+        "number": "17",
+        "name": "SHD/SD2",
+        "type": "bidirectional",
+        "x": -15.24,
+        "y": -5.08,
+        "angle": 0
+      },
+      {
+        "number": "18",
+        "name": "SWP/SD3",
+        "type": "bidirectional",
+        "x": -15.24,
+        "y": -7.62,
+        "angle": 0
+      },
+      {
+        "number": "19",
+        "name": "SCS/CMD",
+        "type": "bidirectional",
+        "x": -15.24,
+        "y": -12.7,
+        "angle": 0
+      },
+      {
+        "number": "2",
+        "name": "VDD",
+        "type": "power_in",
+        "x": 0.0,
+        "y": 35.56,
+        "angle": 270
+      },
+      {
+        "number": "20",
+        "name": "SCK/CLK",
+        "type": "bidirectional",
+        "x": -15.24,
+        "y": -10.16,
+        "angle": 0
+      },
+      {
+        "number": "21",
+        "name": "SDO/SD0",
+        "type": "bidirectional",
+        "x": -15.24,
+        "y": 0.0,
+        "angle": 0
+      },
+      {
+        "number": "22",
+        "name": "SDI/SD1",
+        "type": "bidirectional",
+        "x": -15.24,
+        "y": -2.54,
+        "angle": 0
+      },
+      {
+        "number": "23",
+        "name": "IO15",
+        "type": "bidirectional",
+        "x": 15.24,
+        "y": 7.62,
+        "angle": 180
+      },
+      {
+        "number": "24",
+        "name": "IO2",
+        "type": "bidirectional",
+        "x": 15.24,
+        "y": 25.4,
+        "angle": 180
+      },
+      {
+        "number": "25",
+        "name": "IO0",
+        "type": "bidirectional",
+        "x": 15.24,
+        "y": 30.48,
+        "angle": 180
+      },
+      {
+        "number": "26",
+        "name": "IO4",
+        "type": "bidirectional",
+        "x": 15.24,
+        "y": 20.32,
+        "angle": 180
+      },
+      {
+        "number": "27",
+        "name": "IO16",
+        "type": "bidirectional",
+        "x": 15.24,
+        "y": 5.08,
+        "angle": 180
+      },
+      {
+        "number": "28",
+        "name": "IO17",
+        "type": "bidirectional",
+        "x": 15.24,
+        "y": 2.54,
+        "angle": 180
+      },
+      {
+        "number": "29",
+        "name": "IO5",
+        "type": "bidirectional",
+        "x": 15.24,
+        "y": 17.78,
+        "angle": 180
+      },
+      {
+        "number": "3",
+        "name": "EN",
+        "type": "input",
+        "x": -15.24,
+        "y": 30.48,
+        "angle": 0
+      },
+      {
+        "number": "30",
+        "name": "IO18",
+        "type": "bidirectional",
+        "x": 15.24,
+        "y": 0.0,
+        "angle": 180
+      },
+      {
+        "number": "31",
+        "name": "IO19",
+        "type": "bidirectional",
+        "x": 15.24,
+        "y": -2.54,
+        "angle": 180
+      },
+      {
+        "number": "32",
+        "name": "NC",
+        "type": "no_connect",
+        "x": -12.7,
+        "y": -27.94,
+        "angle": 0
+      },
+      {
+        "number": "33",
+        "name": "IO21",
+        "type": "bidirectional",
+        "x": 15.24,
+        "y": -5.08,
+        "angle": 180
+      },
+      {
+        "number": "34",
+        "name": "RXD0/IO3",
+        "type": "bidirectional",
+        "x": 15.24,
+        "y": 22.86,
+        "angle": 180
+      },
+      {
+        "number": "35",
+        "name": "TXD0/IO1",
+        "type": "bidirectional",
+        "x": 15.24,
+        "y": 27.94,
+        "angle": 180
+      },
+      {
+        "number": "36",
+        "name": "IO22",
+        "type": "bidirectional",
+        "x": 15.24,
+        "y": -7.62,
+        "angle": 180
+      },
+      {
+        "number": "37",
+        "name": "IO23",
+        "type": "bidirectional",
+        "x": 15.24,
+        "y": -10.16,
+        "angle": 180
+      },
+      {
+        "number": "38",
+        "name": "GND",
+        "type": "passive",
+        "x": 0.0,
+        "y": -35.56,
+        "angle": 90
+      },
+      {
+        "number": "39",
+        "name": "GND",
+        "type": "passive",
+        "x": 0.0,
+        "y": -35.56,
+        "angle": 90
+      },
+      {
+        "number": "4",
+        "name": "SENSOR_VP",
+        "type": "input",
+        "x": -15.24,
+        "y": 25.4,
+        "angle": 0
+      },
+      {
+        "number": "5",
+        "name": "SENSOR_VN",
+        "type": "input",
+        "x": -15.24,
+        "y": 22.86,
+        "angle": 0
+      },
+      {
+        "number": "6",
+        "name": "IO34",
+        "type": "input",
+        "x": 15.24,
+        "y": -25.4,
+        "angle": 180
+      },
+      {
+        "number": "7",
+        "name": "IO35",
+        "type": "input",
+        "x": 15.24,
+        "y": -27.94,
+        "angle": 180
+      },
+      {
+        "number": "8",
+        "name": "IO32",
+        "type": "bidirectional",
+        "x": 15.24,
+        "y": -20.32,
+        "angle": 180
+      },
+      {
+        "number": "9",
+        "name": "IO33",
+        "type": "bidirectional",
+        "x": 15.24,
+        "y": -22.86,
+        "angle": 180
+      }
+    ],
+    "reference": "U",
+    "footprint": "RF_Module:ESP32-WROOM-32",
+    "datasheet": "https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32_datasheet_en.pdf"
+  },
+  "Device:R": {
+    "symbol": "(symbol \"R\" (pin_numbers hide) (pin_names (offset 0)) (in_bom yes) (on_board yes)\n    (property \"Reference\" \"R\" (at 2.032 0 90)\n      (effects (font (size 1.27 1.27)))\n    )\n    (property \"Value\" \"R\" (at 0 0 90)\n      (effects (font (size 1.27 1.27)))\n    )\n    (property \"Footprint\" \"\" (at -1.778 0 90)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"Datasheet\" \"~\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"ki_keywords\" \"R res resistor\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"ki_description\" \"Resistor\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"ki_fp_filters\" \"R_*\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (symbol \"R_0_1\"\n      (rectangle (start -1.016 -2.54) (end 1.016 2.54)\n        (stroke (width 0.254) (type default))\n        (fill (type none))\n      )\n    )\n    (symbol \"R_1_1\"\n      (pin passive line (at 0 3.81 270) (length 1.27)\n        (name \"~\" (effects (font (size 1.27 1.27))))\n        (number \"1\" (effects (font (size 1.27 1.27))))\n      )\n      (pin passive line (at 0 -3.81 90) (length 1.27)\n        (name \"~\" (effects (font (size 1.27 1.27))))\n        (number \"2\" (effects (font (size 1.27 1.27))))\n      )\n    )\n  )",
+    "pins": [
+      {
+        "number": "1",
+        "name": "~",
+        "type": "passive",
+        "x": 0.0,
+        "y": 3.81,
+        "angle": 270
+      },
+      {
+        "number": "2",
+        "name": "~",
+        "type": "passive",
+        "x": 0.0,
+        "y": -3.81,
+        "angle": 90
+      }
+    ],
+    "reference": "R",
+    "footprint": "",
+    "datasheet": "~"
+  },
+  "Device:C": {
+    "symbol": "(symbol \"C\" (pin_numbers hide) (pin_names (offset 0.254)) (in_bom yes) (on_board yes)\n    (property \"Reference\" \"C\" (at 0.635 2.54 0)\n      (effects (font (size 1.27 1.27)) (justify left))\n    )\n    (property \"Value\" \"C\" (at 0.635 -2.54 0)\n      (effects (font (size 1.27 1.27)) (justify left))\n    )\n    (property \"Footprint\" \"\" (at 0.9652 -3.81 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"Datasheet\" \"~\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"ki_keywords\" \"cap capacitor\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"ki_description\" \"Unpolarized capacitor\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"ki_fp_filters\" \"C_*\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (symbol \"C_0_1\"\n      (polyline\n        (pts\n          (xy -2.032 -0.762)\n          (xy 2.032 -0.762)\n        )\n        (stroke (width 0.508) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy -2.032 0.762)\n          (xy 2.032 0.762)\n        )\n        (stroke (width 0.508) (type default))\n        (fill (type none))\n      )\n    )\n    (symbol \"C_1_1\"\n      (pin passive line (at 0 3.81 270) (length 2.794)\n        (name \"~\" (effects (font (size 1.27 1.27))))\n        (number \"1\" (effects (font (size 1.27 1.27))))\n      )\n      (pin passive line (at 0 -3.81 90) (length 2.794)\n        (name \"~\" (effects (font (size 1.27 1.27))))\n        (number \"2\" (effects (font (size 1.27 1.27))))\n      )\n    )\n  )",
+    "pins": [
+      {
+        "number": "1",
+        "name": "~",
+        "type": "passive",
+        "x": 0.0,
+        "y": 3.81,
+        "angle": 270
+      },
+      {
+        "number": "2",
+        "name": "~",
+        "type": "passive",
+        "x": 0.0,
+        "y": -3.81,
+        "angle": 90
+      }
+    ],
+    "reference": "C",
+    "footprint": "",
+    "datasheet": "~"
+  },
+  "Device:LED": {
+    "symbol": "(symbol \"LED\" (pin_numbers hide) (pin_names (offset 1.016) hide) (in_bom yes) (on_board yes)\n    (property \"Reference\" \"D\" (at 0 2.54 0)\n      (effects (font (size 1.27 1.27)))\n    )\n    (property \"Value\" \"LED\" (at 0 -2.54 0)\n      (effects (font (size 1.27 1.27)))\n    )\n    (property \"Footprint\" \"\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"Datasheet\" \"~\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"ki_keywords\" \"LED diode\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"ki_description\" \"Light emitting diode\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"ki_fp_filters\" \"LED* LED_SMD:* LED_THT:*\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (symbol \"LED_0_1\"\n      (polyline\n        (pts\n          (xy -1.27 -1.27)\n          (xy -1.27 1.27)\n        )\n        (stroke (width 0.254) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy -1.27 0)\n          (xy 1.27 0)\n        )\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy 1.27 -1.27)\n          (xy 1.27 1.27)\n          (xy -1.27 0)\n          (xy 1.27 -1.27)\n        )\n        (stroke (width 0.254) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy -3.048 -0.762)\n          (xy -4.572 -2.286)\n          (xy -3.81 -2.286)\n          (xy -4.572 -2.286)\n          (xy -4.572 -1.524)\n        )\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy -1.778 -0.762)\n          (xy -3.302 -2.286)\n          (xy -2.54 -2.286)\n          (xy -3.302 -2.286)\n          (xy -3.302 -1.524)\n        )\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n    )\n    (symbol \"LED_1_1\"\n      (pin passive line (at -3.81 0 0) (length 2.54)\n        (name \"K\" (effects (font (size 1.27 1.27))))\n        (number \"1\" (effects (font (size 1.27 1.27))))\n      )\n      (pin passive line (at 3.81 0 180) (length 2.54)\n        (name \"A\" (effects (font (size 1.27 1.27))))\n        (number \"2\" (effects (font (size 1.27 1.27))))\n      )\n    )\n  )",
+    "pins": [
+      {
+        "number": "1",
+        "name": "K",
+        "type": "passive",
+        "x": -3.81,
+        "y": 0.0,
+        "angle": 0
+      },
+      {
+        "number": "2",
+        "name": "A",
+        "type": "passive",
+        "x": 3.81,
+        "y": 0.0,
+        "angle": 180
+      }
+    ],
+    "reference": "D",
+    "footprint": "",
+    "datasheet": "~"
+  },
+  "Device:LED_RAGB": {
+    "symbol": "(symbol \"LED_RAGB\" (pin_names (offset 0) hide) (in_bom yes) (on_board yes)\n    (property \"Reference\" \"D\" (at 0 9.398 0)\n      (effects (font (size 1.27 1.27)))\n    )\n    (property \"Value\" \"LED_RAGB\" (at 0 -8.89 0)\n      (effects (font (size 1.27 1.27)))\n    )\n    (property \"Footprint\" \"\" (at 0 -1.27 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"Datasheet\" \"~\" (at 0 -1.27 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"ki_keywords\" \"LED RGB diode\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"ki_description\" \"RGB LED, red/anode/green/blue\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"ki_fp_filters\" \"LED* LED_SMD:* LED_THT:*\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (symbol \"LED_RAGB_0_0\"\n      (text \"B\" (at -1.905 -6.35 0)\n        (effects (font (size 1.27 1.27)))\n      )\n      (text \"G\" (at -1.905 -1.27 0)\n        (effects (font (size 1.27 1.27)))\n      )\n      (text \"R\" (at -1.905 3.81 0)\n        (effects (font (size 1.27 1.27)))\n      )\n    )\n    (symbol \"LED_RAGB_0_1\"\n      (polyline\n        (pts\n          (xy -1.27 -5.08)\n          (xy -2.54 -5.08)\n        )\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy -1.27 -5.08)\n          (xy 1.27 -5.08)\n        )\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy -1.27 -3.81)\n          (xy -1.27 -6.35)\n        )\n        (stroke (width 0.254) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy -1.27 0)\n          (xy -2.54 0)\n        )\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy -1.27 1.27)\n          (xy -1.27 -1.27)\n        )\n        (stroke (width 0.254) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy -1.27 5.08)\n          (xy -2.54 5.08)\n        )\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy -1.27 5.08)\n          (xy 1.27 5.08)\n        )\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy -1.27 6.35)\n          (xy -1.27 3.81)\n        )\n        (stroke (width 0.254) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy 1.27 0)\n          (xy -1.27 0)\n        )\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy 1.27 0)\n          (xy 2.54 0)\n        )\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy -1.27 1.27)\n          (xy -1.27 -1.27)\n          (xy -1.27 -1.27)\n        )\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy -1.27 6.35)\n          (xy -1.27 3.81)\n          (xy -1.27 3.81)\n        )\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy 1.27 -5.08)\n          (xy 2.032 -5.08)\n          (xy 2.032 5.08)\n          (xy 1.27 5.08)\n        )\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy 1.27 -3.81)\n          (xy 1.27 -6.35)\n          (xy -1.27 -5.08)\n          (xy 1.27 -3.81)\n        )\n        (stroke (width 0.254) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy 1.27 1.27)\n          (xy 1.27 -1.27)\n          (xy -1.27 0)\n          (xy 1.27 1.27)\n        )\n        (stroke (width 0.254) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy 1.27 6.35)\n          (xy 1.27 3.81)\n          (xy -1.27 5.08)\n          (xy 1.27 6.35)\n        )\n        (stroke (width 0.254) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy -1.016 -3.81)\n          (xy 0.508 -2.286)\n          (xy -0.254 -2.286)\n          (xy 0.508 -2.286)\n          (xy 0.508 -3.048)\n        )\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy -1.016 1.27)\n          (xy 0.508 2.794)\n          (xy -0.254 2.794)\n          (xy 0.508 2.794)\n          (xy 0.508 2.032)\n        )\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy -1.016 6.35)\n          (xy 0.508 7.874)\n          (xy -0.254 7.874)\n          (xy 0.508 7.874)\n          (xy 0.508 7.112)\n        )\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy 0 -3.81)\n          (xy 1.524 -2.286)\n          (xy 0.762 -2.286)\n          (xy 1.524 -2.286)\n          (xy 1.524 -3.048)\n        )\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy 0 1.27)\n          (xy 1.524 2.794)\n          (xy 0.762 2.794)\n          (xy 1.524 2.794)\n          (xy 1.524 2.032)\n        )\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy 0 6.35)\n          (xy 1.524 7.874)\n          (xy 0.762 7.874)\n          (xy 1.524 7.874)\n          (xy 1.524 7.112)\n        )\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n      (rectangle (start 1.27 -1.27) (end 1.27 1.27)\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n      (rectangle (start 1.27 1.27) (end 1.27 1.27)\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n      (rectangle (start 1.27 3.81) (end 1.27 6.35)\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n      (rectangle (start 1.27 6.35) (end 1.27 6.35)\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n      (circle (center 2.032 0) (radius 0.254)\n        (stroke (width 0) (type default))\n        (fill (type outline))\n      )\n      (rectangle (start 2.794 8.382) (end -2.794 -7.62)\n        (stroke (width 0.254) (type default))\n        (fill (type background))\n      )\n    )\n    (symbol \"LED_RAGB_1_1\"\n      (pin passive line (at -5.08 5.08 0) (length 2.54)\n        (name \"RK\" (effects (font (size 1.27 1.27))))\n        (number \"1\" (effects (font (size 1.27 1.27))))\n      )\n      (pin passive line (at 5.08 0 180) (length 2.54)\n        (name \"A\" (effects (font (size 1.27 1.27))))\n        (number \"2\" (effects (font (size 1.27 1.27))))\n      )\n      (pin passive line (at -5.08 0 0) (length 2.54)\n        (name \"GK\" (effects (font (size 1.27 1.27))))\n        (number \"3\" (effects (font (size 1.27 1.27))))\n      )\n      (pin passive line (at -5.08 -5.08 0) (length 2.54)\n        (name \"BK\" (effects (font (size 1.27 1.27))))\n        (number \"4\" (effects (font (size 1.27 1.27))))\n      )\n    )\n  )",
+    "pins": [
+      {
+        "number": "1",
+        "name": "RK",
+        "type": "passive",
+        "x": -5.08,
+        "y": 5.08,
+        "angle": 0
+      },
+      {
+        "number": "2",
+        "name": "A",
+        "type": "passive",
+        "x": 5.08,
+        "y": 0.0,
+        "angle": 180
+      },
+      {
+        "number": "3",
+        "name": "GK",
+        "type": "passive",
+        "x": -5.08,
+        "y": 0.0,
+        "angle": 0
+      },
+      {
+        "number": "4",
+        "name": "BK",
+        "type": "passive",
+        "x": -5.08,
+        "y": -5.08,
+        "angle": 0
+      }
+    ],
+    "reference": "D",
+    "footprint": "",
+    "datasheet": "~"
+  },
+  "Device:LED_RKGB": {
+    "symbol": "(symbol \"LED_RKGB\" (pin_names (offset 0) hide) (in_bom yes) (on_board yes)\n    (property \"Reference\" \"D\" (at 0 9.398 0)\n      (effects (font (size 1.27 1.27)))\n    )\n    (property \"Value\" \"LED_RKGB\" (at 0 -8.89 0)\n      (effects (font (size 1.27 1.27)))\n    )\n    (property \"Footprint\" \"\" (at 0 -1.27 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"Datasheet\" \"~\" (at 0 -1.27 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"ki_keywords\" \"LED RGB diode\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"ki_description\" \"RGB LED, red/cathode/green/blue\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"ki_fp_filters\" \"LED* LED_SMD:* LED_THT:*\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (symbol \"LED_RKGB_0_0\"\n      (text \"B\" (at 1.905 -6.35 0)\n        (effects (font (size 1.27 1.27)))\n      )\n      (text \"G\" (at 1.905 -1.27 0)\n        (effects (font (size 1.27 1.27)))\n      )\n      (text \"R\" (at 1.905 3.81 0)\n        (effects (font (size 1.27 1.27)))\n      )\n    )\n    (symbol \"LED_RKGB_0_1\"\n      (circle (center -2.032 0) (radius 0.254)\n        (stroke (width 0) (type default))\n        (fill (type outline))\n      )\n      (polyline\n        (pts\n          (xy -1.27 -5.08)\n          (xy 1.27 -5.08)\n        )\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy -1.27 -3.81)\n          (xy -1.27 -6.35)\n        )\n        (stroke (width 0.254) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy -1.27 0)\n          (xy -2.54 0)\n        )\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy -1.27 1.27)\n          (xy -1.27 -1.27)\n        )\n        (stroke (width 0.254) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy -1.27 5.08)\n          (xy 1.27 5.08)\n        )\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy -1.27 6.35)\n          (xy -1.27 3.81)\n        )\n        (stroke (width 0.254) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy 1.27 -5.08)\n          (xy 2.54 -5.08)\n        )\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy 1.27 0)\n          (xy -1.27 0)\n        )\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy 1.27 0)\n          (xy 2.54 0)\n        )\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy 1.27 5.08)\n          (xy 2.54 5.08)\n        )\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy -1.27 1.27)\n          (xy -1.27 -1.27)\n          (xy -1.27 -1.27)\n        )\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy -1.27 6.35)\n          (xy -1.27 3.81)\n          (xy -1.27 3.81)\n        )\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy -1.27 5.08)\n          (xy -2.032 5.08)\n          (xy -2.032 -5.08)\n          (xy -1.016 -5.08)\n        )\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy 1.27 -3.81)\n          (xy 1.27 -6.35)\n          (xy -1.27 -5.08)\n          (xy 1.27 -3.81)\n        )\n        (stroke (width 0.254) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy 1.27 1.27)\n          (xy 1.27 -1.27)\n          (xy -1.27 0)\n          (xy 1.27 1.27)\n        )\n        (stroke (width 0.254) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy 1.27 6.35)\n          (xy 1.27 3.81)\n          (xy -1.27 5.08)\n          (xy 1.27 6.35)\n        )\n        (stroke (width 0.254) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy -1.016 -3.81)\n          (xy 0.508 -2.286)\n          (xy -0.254 -2.286)\n          (xy 0.508 -2.286)\n          (xy 0.508 -3.048)\n        )\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy -1.016 1.27)\n          (xy 0.508 2.794)\n          (xy -0.254 2.794)\n          (xy 0.508 2.794)\n          (xy 0.508 2.032)\n        )\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy -1.016 6.35)\n          (xy 0.508 7.874)\n          (xy -0.254 7.874)\n          (xy 0.508 7.874)\n          (xy 0.508 7.112)\n        )\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy 0 -3.81)\n          (xy 1.524 -2.286)\n          (xy 0.762 -2.286)\n          (xy 1.524 -2.286)\n          (xy 1.524 -3.048)\n        )\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy 0 1.27)\n          (xy 1.524 2.794)\n          (xy 0.762 2.794)\n          (xy 1.524 2.794)\n          (xy 1.524 2.032)\n        )\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy 0 6.35)\n          (xy 1.524 7.874)\n          (xy 0.762 7.874)\n          (xy 1.524 7.874)\n          (xy 1.524 7.112)\n        )\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n      (rectangle (start 1.27 -1.27) (end 1.27 1.27)\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n      (rectangle (start 1.27 1.27) (end 1.27 1.27)\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n      (rectangle (start 1.27 3.81) (end 1.27 6.35)\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n      (rectangle (start 1.27 6.35) (end 1.27 6.35)\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n      (rectangle (start 2.794 8.382) (end -2.794 -7.62)\n        (stroke (width 0.254) (type default))\n        (fill (type background))\n      )\n    )\n    (symbol \"LED_RKGB_1_1\"\n      (pin passive line (at 5.08 5.08 180) (length 2.54)\n        (name \"RA\" (effects (font (size 1.27 1.27))))\n        (number \"1\" (effects (font (size 1.27 1.27))))\n      )\n      (pin passive line (at -5.08 0 0) (length 2.54)\n        (name \"K\" (effects (font (size 1.27 1.27))))\n        (number \"2\" (effects (font (size 1.27 1.27))))\n      )\n      (pin passive line (at 5.08 0 180) (length 2.54)\n        (name \"GA\" (effects (font (size 1.27 1.27))))\n        (number \"3\" (effects (font (size 1.27 1.27))))\n      )\n      (pin passive line (at 5.08 -5.08 180) (length 2.54)\n        (name \"BA\" (effects (font (size 1.27 1.27))))\n        (number \"4\" (effects (font (size 1.27 1.27))))\n      )\n    )\n  )",
+    "pins": [
+      {
+        "number": "1",
+        "name": "RA",
+        "type": "passive",
+        "x": 5.08,
+        "y": 5.08,
+        "angle": 180
+      },
+      {
+        "number": "2",
+        "name": "K",
+        "type": "passive",
+        "x": -5.08,
+        "y": 0.0,
+        "angle": 0
+      },
+      {
+        "number": "3",
+        "name": "GA",
+        "type": "passive",
+        "x": 5.08,
+        "y": 0.0,
+        "angle": 180
+      },
+      {
+        "number": "4",
+        "name": "BA",
+        "type": "passive",
+        "x": 5.08,
+        "y": -5.08,
+        "angle": 180
+      }
+    ],
+    "reference": "D",
+    "footprint": "",
+    "datasheet": "~"
+  },
+  "Switch:SW_Push": {
+    "symbol": "(symbol \"SW_Push\" (pin_numbers hide) (pin_names (offset 1.016) hide) (in_bom yes) (on_board yes)\n    (property \"Reference\" \"SW\" (at 1.27 2.54 0)\n      (effects (font (size 1.27 1.27)) (justify left))\n    )\n    (property \"Value\" \"SW_Push\" (at 0 -1.524 0)\n      (effects (font (size 1.27 1.27)))\n    )\n    (property \"Footprint\" \"\" (at 0 5.08 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"Datasheet\" \"~\" (at 0 5.08 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"ki_keywords\" \"switch normally-open pushbutton push-button\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"ki_description\" \"Push button switch, generic, two pins\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (symbol \"SW_Push_0_1\"\n      (circle (center -2.032 0) (radius 0.508)\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy 0 1.27)\n          (xy 0 3.048)\n        )\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy 2.54 1.27)\n          (xy -2.54 1.27)\n        )\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n      (circle (center 2.032 0) (radius 0.508)\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n      (pin passive line (at -5.08 0 0) (length 2.54)\n        (name \"1\" (effects (font (size 1.27 1.27))))\n        (number \"1\" (effects (font (size 1.27 1.27))))\n      )\n      (pin passive line (at 5.08 0 180) (length 2.54)\n        (name \"2\" (effects (font (size 1.27 1.27))))\n        (number \"2\" (effects (font (size 1.27 1.27))))\n      )\n    )\n  )",
+    "pins": [
+      {
+        "number": "1",
+        "name": "1",
+        "type": "passive",
+        "x": -5.08,
+        "y": 0.0,
+        "angle": 0
+      },
+      {
+        "number": "2",
+        "name": "2",
+        "type": "passive",
+        "x": 5.08,
+        "y": 0.0,
+        "angle": 180
+      }
+    ],
+    "reference": "SW",
+    "footprint": "",
+    "datasheet": "~"
+  },
+  "Switch:SW_SPST": {
+    "symbol": "(symbol \"SW_SPST\" (pin_names (offset 0) hide) (in_bom yes) (on_board yes)\n    (property \"Reference\" \"SW\" (at 0 3.175 0)\n      (effects (font (size 1.27 1.27)))\n    )\n    (property \"Value\" \"SW_SPST\" (at 0 -2.54 0)\n      (effects (font (size 1.27 1.27)))\n    )\n    (property \"Footprint\" \"\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"Datasheet\" \"~\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"ki_keywords\" \"switch lever\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"ki_description\" \"Single Pole Single Throw (SPST) switch\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (symbol \"SW_SPST_0_0\"\n      (circle (center -2.032 0) (radius 0.508)\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n      (polyline\n        (pts\n          (xy -1.524 0.254)\n          (xy 1.524 1.778)\n        )\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n      (circle (center 2.032 0) (radius 0.508)\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n    )\n    (symbol \"SW_SPST_1_1\"\n      (pin passive line (at -5.08 0 0) (length 2.54)\n        (name \"A\" (effects (font (size 1.27 1.27))))\n        (number \"1\" (effects (font (size 1.27 1.27))))\n      )\n      (pin passive line (at 5.08 0 180) (length 2.54)\n        (name \"B\" (effects (font (size 1.27 1.27))))\n        (number \"2\" (effects (font (size 1.27 1.27))))\n      )\n    )\n  )",
+    "pins": [
+      {
+        "number": "1",
+        "name": "A",
+        "type": "passive",
+        "x": -5.08,
+        "y": 0.0,
+        "angle": 0
+      },
+      {
+        "number": "2",
+        "name": "B",
+        "type": "passive",
+        "x": 5.08,
+        "y": 0.0,
+        "angle": 180
+      }
+    ],
+    "reference": "SW",
+    "footprint": "",
+    "datasheet": "~"
+  },
+  "Connector:TestPoint": {
+    "symbol": "(symbol \"TestPoint\" (pin_numbers hide) (pin_names (offset 0.762) hide) (in_bom yes) (on_board yes)\n    (property \"Reference\" \"TP\" (at 0 6.858 0)\n      (effects (font (size 1.27 1.27)))\n    )\n    (property \"Value\" \"TestPoint\" (at 0 5.08 0)\n      (effects (font (size 1.27 1.27)))\n    )\n    (property \"Footprint\" \"\" (at 5.08 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"Datasheet\" \"~\" (at 5.08 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"ki_keywords\" \"test point tp\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"ki_description\" \"test point\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"ki_fp_filters\" \"Pin* Test*\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (symbol \"TestPoint_0_1\"\n      (circle (center 0 3.302) (radius 0.762)\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n    )\n    (symbol \"TestPoint_1_1\"\n      (pin passive line (at 0 0 90) (length 2.54)\n        (name \"1\" (effects (font (size 1.27 1.27))))\n        (number \"1\" (effects (font (size 1.27 1.27))))\n      )\n    )\n  )",
+    "pins": [
+      {
+        "number": "1",
+        "name": "1",
+        "type": "passive",
+        "x": 0.0,
+        "y": 0.0,
+        "angle": 90
+      }
+    ],
+    "reference": "TP",
+    "footprint": "",
+    "datasheet": "~"
+  },
+  "Connector_Generic:Conn_01x02": {
+    "symbol": "(symbol \"Conn_01x02\" (pin_names (offset 1.016) hide) (in_bom yes) (on_board yes)\n    (property \"Reference\" \"J\" (at 0 2.54 0)\n      (effects (font (size 1.27 1.27)))\n    )\n    (property \"Value\" \"Conn_01x02\" (at 0 -5.08 0)\n      (effects (font (size 1.27 1.27)))\n    )\n    (property \"Footprint\" \"\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"Datasheet\" \"~\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"ki_keywords\" \"connector\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"ki_description\" \"Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"ki_fp_filters\" \"Connector*:*_1x??_*\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (symbol \"Conn_01x02_1_1\"\n      (rectangle (start -1.27 -2.413) (end 0 -2.667)\n        (stroke (width 0.1524) (type default))\n        (fill (type none))\n      )\n      (rectangle (start -1.27 0.127) (end 0 -0.127)\n        (stroke (width 0.1524) (type default))\n        (fill (type none))\n      )\n      (rectangle (start -1.27 1.27) (end 1.27 -3.81)\n        (stroke (width 0.254) (type default))\n        (fill (type background))\n      )\n      (pin passive line (at -5.08 0 0) (length 3.81)\n        (name \"Pin_1\" (effects (font (size 1.27 1.27))))\n        (number \"1\" (effects (font (size 1.27 1.27))))\n      )\n      (pin passive line (at -5.08 -2.54 0) (length 3.81)\n        (name \"Pin_2\" (effects (font (size 1.27 1.27))))\n        (number \"2\" (effects (font (size 1.27 1.27))))\n      )\n    )\n  )",
+    "pins": [
+      {
+        "number": "1",
+        "name": "Pin_1",
+        "type": "passive",
+        "x": -5.08,
+        "y": 0.0,
+        "angle": 0
+      },
+      {
+        "number": "2",
+        "name": "Pin_2",
+        "type": "passive",
+        "x": -5.08,
+        "y": -2.54,
+        "angle": 0
+      }
+    ],
+    "reference": "J",
+    "footprint": "",
+    "datasheet": "~"
+  },
+  "Connector_Generic:Conn_01x06": {
+    "symbol": "(symbol \"Conn_01x06\" (pin_names (offset 1.016) hide) (in_bom yes) (on_board yes)\n    (property \"Reference\" \"J\" (at 0 7.62 0)\n      (effects (font (size 1.27 1.27)))\n    )\n    (property \"Value\" \"Conn_01x06\" (at 0 -10.16 0)\n      (effects (font (size 1.27 1.27)))\n    )\n    (property \"Footprint\" \"\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"Datasheet\" \"~\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"ki_keywords\" \"connector\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"ki_description\" \"Generic connector, single row, 01x06, script generated (kicad-library-utils/schlib/autogen/connector/)\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"ki_fp_filters\" \"Connector*:*_1x??_*\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (symbol \"Conn_01x06_1_1\"\n      (rectangle (start -1.27 -7.493) (end 0 -7.747)\n        (stroke (width 0.1524) (type default))\n        (fill (type none))\n      )\n      (rectangle (start -1.27 -4.953) (end 0 -5.207)\n        (stroke (width 0.1524) (type default))\n        (fill (type none))\n      )\n      (rectangle (start -1.27 -2.413) (end 0 -2.667)\n        (stroke (width 0.1524) (type default))\n        (fill (type none))\n      )\n      (rectangle (start -1.27 0.127) (end 0 -0.127)\n        (stroke (width 0.1524) (type default))\n        (fill (type none))\n      )\n      (rectangle (start -1.27 2.667) (end 0 2.413)\n        (stroke (width 0.1524) (type default))\n        (fill (type none))\n      )\n      (rectangle (start -1.27 5.207) (end 0 4.953)\n        (stroke (width 0.1524) (type default))\n        (fill (type none))\n      )\n      (rectangle (start -1.27 6.35) (end 1.27 -8.89)\n        (stroke (width 0.254) (type default))\n        (fill (type background))\n      )\n      (pin passive line (at -5.08 5.08 0) (length 3.81)\n        (name \"Pin_1\" (effects (font (size 1.27 1.27))))\n        (number \"1\" (effects (font (size 1.27 1.27))))\n      )\n      (pin passive line (at -5.08 2.54 0) (length 3.81)\n        (name \"Pin_2\" (effects (font (size 1.27 1.27))))\n        (number \"2\" (effects (font (size 1.27 1.27))))\n      )\n      (pin passive line (at -5.08 0 0) (length 3.81)\n        (name \"Pin_3\" (effects (font (size 1.27 1.27))))\n        (number \"3\" (effects (font (size 1.27 1.27))))\n      )\n      (pin passive line (at -5.08 -2.54 0) (length 3.81)\n        (name \"Pin_4\" (effects (font (size 1.27 1.27))))\n        (number \"4\" (effects (font (size 1.27 1.27))))\n      )\n      (pin passive line (at -5.08 -5.08 0) (length 3.81)\n        (name \"Pin_5\" (effects (font (size 1.27 1.27))))\n        (number \"5\" (effects (font (size 1.27 1.27))))\n      )\n      (pin passive line (at -5.08 -7.62 0) (length 3.81)\n        (name \"Pin_6\" (effects (font (size 1.27 1.27))))\n        (number \"6\" (effects (font (size 1.27 1.27))))\n      )\n    )\n  )",
+    "pins": [
+      {
+        "number": "1",
+        "name": "Pin_1",
+        "type": "passive",
+        "x": -5.08,
+        "y": 5.08,
+        "angle": 0
+      },
+      {
+        "number": "2",
+        "name": "Pin_2",
+        "type": "passive",
+        "x": -5.08,
+        "y": 2.54,
+        "angle": 0
+      },
+      {
+        "number": "3",
+        "name": "Pin_3",
+        "type": "passive",
+        "x": -5.08,
+        "y": 0.0,
+        "angle": 0
+      },
+      {
+        "number": "4",
+        "name": "Pin_4",
+        "type": "passive",
+        "x": -5.08,
+        "y": -2.54,
+        "angle": 0
+      },
+      {
+        "number": "5",
+        "name": "Pin_5",
+        "type": "passive",
+        "x": -5.08,
+        "y": -5.08,
+        "angle": 0
+      },
+      {
+        "number": "6",
+        "name": "Pin_6",
+        "type": "passive",
+        "x": -5.08,
+        "y": -7.62,
+        "angle": 0
+      }
+    ],
+    "reference": "J",
+    "footprint": "",
+    "datasheet": "~"
+  },
+  "power:PWR_FLAG": {
+    "symbol": "(symbol \"PWR_FLAG\" (power) (pin_numbers hide) (pin_names (offset 0) hide) (in_bom yes) (on_board yes)\n    (property \"Reference\" \"#FLG\" (at 0 1.905 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"Value\" \"PWR_FLAG\" (at 0 3.81 0)\n      (effects (font (size 1.27 1.27)))\n    )\n    (property \"Footprint\" \"\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"Datasheet\" \"~\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"ki_keywords\" \"flag power\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (property \"ki_description\" \"Special symbol for telling ERC where power comes from\" (at 0 0 0)\n      (effects (font (size 1.27 1.27)) hide)\n    )\n    (symbol \"PWR_FLAG_0_0\"\n      (pin power_out line (at 0 0 90) (length 0)\n        (name \"pwr\" (effects (font (size 1.27 1.27))))\n        (number \"1\" (effects (font (size 1.27 1.27))))\n      )\n    )\n    (symbol \"PWR_FLAG_0_1\"\n      (polyline\n        (pts\n          (xy 0 0)\n          (xy 0 1.27)\n          (xy -1.016 1.905)\n          (xy 0 2.54)\n          (xy 1.016 1.905)\n          (xy 0 1.27)\n        )\n        (stroke (width 0) (type default))\n        (fill (type none))\n      )\n    )\n  )",
+    "pins": [
+      {
+        "number": "1",
+        "name": "pwr",
+        "type": "power_out",
+        "x": 0.0,
+        "y": 0.0,
+        "angle": 90
+      }
+    ],
+    "reference": "#FLG",
+    "footprint": "",
+    "datasheet": "~"
+  }
+}

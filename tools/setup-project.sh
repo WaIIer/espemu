@@ -92,8 +92,9 @@ if [[ -e "$PROJECT_DIR" && ! -d "$PROJECT_DIR" ]]; then
 fi
 install_makefile() {
     if [[ -e "$PROJECT_DIR/Makefile" || -L "$PROJECT_DIR/Makefile" ]]; then
-        previous='/make test /d; /DEVICE=TYPE/d; s/ add_component doctor test/ add_component doctor/g'
+        previous='/make kicad /d; s/ test kicad/ test/g; /make test /d; /DEVICE=TYPE/d; s/ add_component doctor test/ add_component doctor/g'
         if [[ ! -L "$PROJECT_DIR/Makefile" && -f "$PROJECT_DIR/.espemu-framework" ]] && {
+            cmp -s <(printf '%s\n' "$(< "$PROJECT_DIR/Makefile")") <(sed '/make kicad /d; s/ test kicad/ test/g' "$ROOT/templates/project.Makefile") ||
             cmp -s <(printf '%s\n' "$(< "$PROJECT_DIR/Makefile")") <(sed "$previous" "$ROOT/templates/project.Makefile") ||
             cmp -s <(printf '%s\n' "$(< "$PROJECT_DIR/Makefile")") <(sed "$previous"'; /make doctor /d; s/ doctor//g' "$ROOT/templates/project.Makefile") ||
             cmp -s <(printf '%s\n' "$(< "$PROJECT_DIR/Makefile")") <(sed "$previous"'; /make add_component/d; /make doctor /d; s/ add_component doctor//g' "$ROOT/templates/project.Makefile") ||

@@ -109,6 +109,16 @@
     color: var(--muted);
 }
 
+.creator-device .kicad-note,
+.kicad-note {
+    color: var(--bs-warning-text-emphasis);
+}
+
+p.kicad-note {
+    margin: 10px 0;
+    font-size: .875em;
+}
+
 .creator-export {
     position: sticky;
     top: 20px;

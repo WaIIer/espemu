@@ -8,6 +8,7 @@ import { PERIPHERAL_REGISTRY, isCamera, isSensor, isSpeaker, peripheralFamily, w
 import type { ProjectManifest } from '../shared/manifest.ts';
 import { z } from 'zod';
 import { deviceMacroName, devicePinsHeader } from '../shared/device-pins.ts';
+import { kicadProjectFiles } from './kicad-export.ts';
 export { deviceMacroName, devicePinsHeader } from '../shared/device-pins.ts';
 
 const frameworkRoot = fileURLToPath(new URL('../', import.meta.url));
@@ -75,9 +76,10 @@ function regressionExample(manifest: ProjectManifest): string {
 
 export function projectReadme(directory: string, manifest: ProjectManifest, _root = frameworkRoot): string {
   const lines = [`# ${basename(directory)}`, '', 'Generated from the project circuit manifest. These examples are documentation, not code automatically inserted into your application.',
-    '', '## Project Commands', code('make help\nmake add_component\nDEVICE=bme280 make add_component\nmake build\nmake run\nmake web\nmake test\nmake clean\nmake validate\nmake docs', 'sh'),
+    '', '## Project Commands', code('make help\nmake add_component\nDEVICE=bme280 make add_component\nmake build\nmake run\nmake web\nmake test\nmake clean\nmake validate\nmake docs\nmake kicad', 'sh'),
     'make run builds this firmware and starts QEMU/web; make web reuses its built image. DEVICE=TYPE or DEVICE=\'{"type":"led","id":"fan","pin":25}\' adds a device without prompts. make test builds the firmware and runs the regression tests in test/. clean removes only build output. No special UART telemetry is needed for GPIO/model visualization.',
     '', '## System Block Diagram', code(blockDiagram(manifest), 'mermaid'), 'Logical connections only; this is not an electrical schematic.',
+    '', '## KiCad Export', 'make kicad creates a self-contained KiCad 7+ project in kicad/ without building or changing firmware. Open kicad/espemu.kicad_pro. The export contains explicit power/signal nets, qualified sensor circuits, supporting parts, a BOM and export-report.json. Unqualified devices are omitted with reasons, never represented by guessed connectors. Read kicad/README.txt and the omission report before using the schematic. The hardware target is an externally powered 3.3 V ESP32-WROOM-32 module, not an unspecified development board. User-edited KiCad files preserve the entire existing export bundle.',
     '', '## Editor Setup', 'Open this folder in VS Code, either in the generated Dev Container or from an activated local ESP-IDF environment. Run the ESP-IDF: Prepare IntelliSense task to generate build/compile_commands.json without building firmware. IntelliSense uses the actual compiler, flags and headers from that database.',
     '', '## Circuit', '| Instance | Model | Wiring |', '| --- | --- | --- |',
     ...manifest.devices.map(device=>`| ${device.id} | ${device.type} | ${isSensor(device) ? `${device.bus} / 0x${device.address.toString(16)}` : isSpeaker(device) ? `DIN: GPIO${device.din}, BCLK: GPIO${device.bclk}, LRCLK: GPIO${device.lrclk}` : isCamera(device) ? cameraWiring(device.signals) : device.type==='max7219' ? wiredPins(device).map((pin,index)=>`${['DIN','CLK','LOAD'][index]}: GPIO${pin}`).join(', ') : device.type==='rgb' ? device.pins.map((pin,index)=>`${['R','G','B'][index]}: GPIO${pin}`).join(', ') : `GPIO${device.pin}`} |`),
@@ -155,7 +157,7 @@ function deviceSdkFiles(root: string, manifest: ProjectManifest): Record<string,
   return files;
 }
 
-export function generateProjectArtifacts(directory: string, root = frameworkRoot, force = false) {
+export function generateProjectArtifacts(directory: string, root = frameworkRoot, force = false, kicad = false) {
   const project=resolve(directory);
   if(!existsSync(join(project,'CMakeLists.txt')))throw new Error(`Not an ESP-IDF project: ${project}`);
   const manifest=loadProject(root,{ESPEMU_PROJECT:project}).manifest;
@@ -163,10 +165,22 @@ export function generateProjectArtifacts(directory: string, root = frameworkRoot
   if(lstatSync(ledgerFile,{throwIfNoEntry:false})?.isSymbolicLink())throw new Error('Generated-file record is a symlink; no files changed.');
   const ledger:Record<string,string>=existsSync(ledgerFile)?z.record(z.string().regex(/^[a-f0-9]{64}$/)).parse(JSON.parse(readFileSync(ledgerFile,'utf8'))):{};
   const reference=projectReadme(project,manifest,root);
-  const files={ 'README.md':`# ${basename(project)}\n\nIn VS Code, use **Dev Containers: Reopen in Container** for the pinned ESP-IDF toolchain, then run **ESP-IDF: Prepare IntelliSense** or **ESP-IDF: Build Firmware** from **Tasks: Run Task**. The build is also the default VS Code build task. Docker and the Dev Containers extension are required only for the container workflow.\n\nSee [ESPEmu device reference](ESPEMU-DEVICES.md) for wiring, SDK examples, and project commands.\n`, 'ESPEMU-DEVICES.md':reference, 'main/device_pins.h':devicePinsHeader(manifest), ...deviceSdkFiles(root,manifest), ...editorFiles(project,root) };
+  const files: Record<string, string> = kicad ? kicadProjectFiles(manifest) : { 'README.md':`# ${basename(project)}\n\nIn VS Code, use **Dev Containers: Reopen in Container** for the pinned ESP-IDF toolchain, then run **ESP-IDF: Prepare IntelliSense** or **ESP-IDF: Build Firmware** from **Tasks: Run Task**. The build is also the default VS Code build task. Docker and the Dev Containers extension are required only for the container workflow.\n\nSee [ESPEmu device reference](ESPEMU-DEVICES.md) for wiring, SDK examples, and project commands.\n`, 'ESPEMU-DEVICES.md':reference, 'main/device_pins.h':devicePinsHeader(manifest), ...deviceSdkFiles(root,manifest), ...editorFiles(project,root) };
   const written:string[]=[],preserved:string[]=[];
   const cmakeFile=join(project,'CMakeLists.txt'),cmake=readFileSync(cmakeFile,'utf8');
-  if(usesDeviceSdk(manifest)&&lstatSync(cmakeFile).isSymbolicLink())throw new Error('Cannot install the device SDK through a symlink CMakeLists.txt.');
+  if(!kicad&&usesDeviceSdk(manifest)&&lstatSync(cmakeFile).isSymbolicLink())throw new Error('Cannot install the device SDK through a symlink CMakeLists.txt.');
+  if (kicad) {
+    const bundlePaths = [...new Set([...Object.keys(files), ...Object.keys(ledger).filter(relative => relative.startsWith('kicad/'))])];
+    const changed = bundlePaths.some(relative => {
+      const filename = join(project, relative);
+      if (lstatSync(join(project, 'kicad'), { throwIfNoEntry: false })?.isSymbolicLink() ||
+          lstatSync(filename, { throwIfNoEntry: false })?.isSymbolicLink()) return true;
+      if (!existsSync(filename)) return false;
+      const current = readFileSync(filename, 'utf8');
+      return !force && current !== files[relative] && hash(current) !== ledger[relative];
+    });
+    if (changed) return { written, preserved: Object.keys(files) };
+  }
   for(const [relative,content] of Object.entries(files)){
     const filename=join(project,relative),parent=dirname(filename);
     let ancestor=parent,linked=false;
@@ -179,11 +193,24 @@ export function generateProjectArtifacts(directory: string, root = frameworkRoot
     }
     mkdirSync(parent,{recursive:true});writeFileSync(filename,content);ledger[relative]=hash(content);written.push(relative);
   }
-  if(usesDeviceSdk(manifest)&&!cmake.includes(sdkHook)){writeFileSync(cmakeFile,cmake.trimEnd()+'\n'+sdkHook+'\n');written.push('CMakeLists.txt');}
+  if(!kicad&&usesDeviceSdk(manifest)&&!cmake.includes(sdkHook)){writeFileSync(cmakeFile,cmake.trimEnd()+'\n'+sdkHook+'\n');written.push('CMakeLists.txt');}
   writeFileSync(ledgerFile,JSON.stringify(ledger,null,2)+'\n');
   return {written,preserved};
 }
 
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){
-  try{const directory=process.argv[2];if(!directory)throw new Error('Usage: project-artifacts.ts PROJECT_DIRECTORY [--force]');const result=generateProjectArtifacts(directory,frameworkRoot,process.argv.includes('--force'));console.log(`Generated: ${result.written.join(', ')||'none'}`);if(result.preserved.length)console.log(`User-edited files preserved: ${result.preserved.join(', ')}`);}catch(error){console.error(error instanceof Error?error.message:String(error));process.exitCode=1;}
+  try{
+    const directory=process.argv[2];
+    if(!directory || process.argv.slice(3).some(argument => !['--force', '--kicad'].includes(argument)))throw new Error('Usage: project-artifacts.ts PROJECT_DIRECTORY [--force] [--kicad]');
+    const kicad = process.argv.includes('--kicad');
+    const result=generateProjectArtifacts(directory,frameworkRoot,process.argv.includes('--force'),kicad);
+    console.log(`Generated: ${result.written.join(', ')||'none'}`);
+    if(result.preserved.length)console.log(`User-edited files preserved: ${result.preserved.join(', ')}`);
+    if (kicad && result.preserved.length) throw new Error('KiCad export not refreshed: the whole bundle was preserved because it contains edited files or symlinks.');
+    if (kicad) {
+      const report = z.object({ devices: z.array(z.object({ id: z.string(), status: z.string(), reason: z.string() })) }).parse(JSON.parse(readFileSync(join(directory, 'kicad/export-report.json'), 'utf8')));
+      for (const device of report.devices) if (device.status === 'omitted') console.warn(`KiCad omitted ${device.id}: ${device.reason}`);
+      console.log('Open kicad/espemu.kicad_pro; review kicad/README.txt and export-report.json before PCB work.');
+    }
+  }catch(error){console.error(error instanceof Error?error.message:String(error));process.exitCode=1;}
 }

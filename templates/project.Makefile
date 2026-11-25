@@ -2,7 +2,7 @@ SHELL := /bin/bash
 .SHELLFLAGS := -eu -o pipefail -c
 .DEFAULT_GOAL := help
 
-.PHONY: help build run web clean rebuild configure validate tools docs editor add_component doctor test
+.PHONY: help build run web clean rebuild configure validate tools docs editor add_component doctor test kicad
 
 help:
 	@printf '%s\n' \
@@ -19,12 +19,13 @@ help:
 	  '  make tools      Prepare the shared framework toolchains.' \
 	  '  make docs       Refresh generated device docs/diagram; preserve user edits.' \
 	  '  make editor     Refresh generated VS Code paths/tasks; preserve user edits.' \
+	  '  make kicad      Export qualified electrical circuits; report omitted devices.' \
 	  '  make add_component  Add one simulated device to this project.' \
 	  '  DEVICE=TYPE|JSON make add_component  Add one device without prompts.' \
 	  '  Ctrl-C stops a running simulation. PORT=4002 make run selects a starting port.' \
 	  '  ESPEMU_FRAMEWORK=/path/to/espemu overrides the recorded framework location.'
 
-build run web clean rebuild configure validate tools docs editor add_component doctor test:
+build run web clean rebuild configure validate tools docs editor add_component doctor test kicad:
 	@if [[ -n "$${ESPEMU_FRAMEWORK:-}" ]]; then \
 	  framework="$$ESPEMU_FRAMEWORK"; \
 	elif [[ -f .espemu-framework ]]; then \

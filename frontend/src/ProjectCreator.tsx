@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { DEMO_MANIFEST, EMPTY_MANIFEST, ProjectManifestSchema, type ProjectManifest } from '../../shared/manifest';
 import { ProjectCreatorConfigSchema, type ProjectCreatorConfig } from '../../shared/project-creator';
 import { ESP32_CAM_SIGNALS, PERIPHERAL_GROUPS, PERIPHERAL_REGISTRY, PIN_NUMBERS, controls, isCamera, isPeripheralInput, isSensor, peripheralGroup, wiredPins, type DeviceType } from '../../shared/registry';
+import { kicadOmission, kicadTypeLimitation } from '../../shared/kicad-support';
 import { ThemeControls, useTheme } from './ThemeControls';
 import './creator.css';
 
@@ -112,6 +113,7 @@ function DeviceForm({ manifest, editing, save, cancel }: { manifest: ProjectMani
       </div>
       {sensor && <p className="meta">Sensors share I2C0 on SDA GPIO21 and SCL GPIO22. Adding a sensor declares this bus.</p>}
       {camera && <p className="meta">The camera uses AI-Thinker ESP32-CAM wiring. SCCB is on GPIO26 and GPIO27, D0 to D7 on GPIO5, 18, 19, 21, 36, 39, 34 and 35, VSYNC on 25, HREF on 23, PCLK on 22, XCLK on 0 and PWDN on 32. GPIO21 and GPIO22 carry camera data, so the project cannot have I2C0 sensors. A project can have one camera.</p>}
+      {kicadTypeLimitation(type) && <p className="kicad-note">KiCad export skips this device. {kicadTypeLimitation(type)}</p>}
       {unavailable && <p className="meta">No free pins, addresses or slots are left for this device.</p>}
       {error && <p className="inline-error" role="alert">{error}</p>}
       <button className="primary-button" type="submit" disabled={unavailable}>{editing?<Pencil size={16}/>:<Plus size={16}/>}{editing?'Save device':'Add device'}</button>{editing&&<button type="button" onClick={cancel}>Cancel</button>}
@@ -235,7 +237,7 @@ export function ProjectCreator() {
         <section className="creator-card">
           <h2>Devices</h2>
           {!(manifest??lastValid).devices.length && <p>The circuit has no devices yet.</p>}
-          {(manifest??lastValid).devices.map(device => <div className="creator-device" key={device.id}><span><strong>{device.id}</strong> / {device.type}<small>{isSensor(device) ? `${device.bus} / 0x${device.address.toString(16)}` : device.type === 'max7219' ? wiredPins(device).map((pin,index)=>`${['DIN','CLK','LOAD'][index]} GPIO${pin}`).join(', ') : `GPIO ${wiredPins(device).join(', ')}`}</small></span>
+          {(manifest??lastValid).devices.map(device => <div className="creator-device" key={device.id}><span><strong>{device.id}</strong> / {device.type}<small>{isSensor(device) ? `${device.bus} / 0x${device.address.toString(16)}` : device.type === 'max7219' ? wiredPins(device).map((pin,index)=>`${['DIN','CLK','LOAD'][index]} GPIO${pin}`).join(', ') : `GPIO ${wiredPins(device).join(', ')}`}</small>{kicadOmission(device) && <small className="kicad-note">KiCad export skips this device. {kicadOmission(device)}</small>}</span>
             <div><button type="button" className="icon-button" aria-label={`Edit ${device.id}`} disabled={!manifest} onClick={() => setEditId(device.id)}><Pencil size={16} /></button><button type="button" className="icon-button" aria-label={`Remove ${device.id}`} disabled={!manifest} onClick={() => removeDevice(device.id)}><Trash2 size={16} /></button></div></div>)}
         </section>
         <details className="creator-card"><summary>Edit the circuit as JSON</summary>
