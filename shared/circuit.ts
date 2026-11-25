@@ -45,26 +45,3 @@ export function circuitConnections(manifest: ProjectManifest) {
   });
   return { controller, parts, nets };
 }
-
-// KiCad's generic netlist terminals are logical connector pins, not IC package pins.
-export function exportKicadNetlist(manifest: ProjectManifest): string {
-  const { controller, parts, nets } = circuitConnections(manifest);
-  const components = [controller, ...parts].filter(part => part.terminals.length);
-  const quote = (text: string) => `"${text.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/[\u0000-\u001f\u007f]/g, ' ')}"`;
-  const symbol = (count: number) => `Conn_01x${String(count).padStart(2, '0')}`;
-  const sizes = [...new Set(components.map(part => part.terminals.length))];
-  return `(export (version "E")
-  (design (source "espemu.json") (tool "ESPEmu logical circuit export"))
-  (components
-${components.map(part => `    (comp (ref ${quote(part.ref)})
-      (value ${quote(`${part.label} [${part.id}] / ${part.description}`)})
-      (libsource (lib "Connector_Generic") (part ${quote(symbol(part.terminals.length))}) (description "Logical signal terminals. Assign physical footprints and add power wiring.")))`).join('\n')})
-  (libparts
-${sizes.map(size => `    (libpart (lib "Connector_Generic") (part ${quote(symbol(size))})
-      (pins ${Array.from({ length: size }, (_, index) => `(pin (num "${index + 1}") (name "Pin_${index + 1}") (type "passive"))`).join(' ')}))`).join('\n')})
-  (libraries (library (logical "Connector_Generic") (uri "Connector_Generic.kicad_sym")))
-  (nets
-${nets.map((net, index) => `    (net (code "${index + 1}") (name ${quote(net.name)})
-${net.nodes.map(node => `      (node (ref ${quote(node.ref)}) (pin ${quote(node.pin)}) (pinfunction ${quote(node.signal)}) (pintype "passive"))`).join('\n')})`).join('\n')}))
-`;
-}

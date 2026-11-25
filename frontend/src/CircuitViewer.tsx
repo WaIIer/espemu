@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { Cpu, Download, Minus, Plus, RotateCcw } from 'lucide-react';
-import { circuitConnections, exportKicadNetlist } from '../../shared/circuit';
+import { Cpu, Minus, Plus, RotateCcw } from 'lucide-react';
+import { circuitConnections } from '../../shared/circuit';
 import type { ProjectManifest } from '../../shared/manifest';
 import './circuit.css';
 
@@ -38,12 +38,6 @@ export function CircuitViewer({ manifest, visibleDevices, inspect }: {
     setZoom(1); setSelected(null);
     scroll.current?.scrollTo({ top: 0, left: 0 });
   }
-  function download() {
-    const url = URL.createObjectURL(new Blob([exportKicadNetlist(manifest)], { type: 'text/plain' }));
-    const anchor = document.createElement('a');
-    anchor.href = url; anchor.download = 'espemu.net'; anchor.click();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
-  }
   return <section className="runtime-circuit circuit-viewer" aria-label="Circuit wiring">
     <div className="section-heading"><h2><Cpu size={17}/>Circuit wiring</h2><span className="meta">{parts.length} devices / {nets.length} signal nets</span></div>
     <div className="circuit-toolbar">
@@ -56,7 +50,6 @@ export function CircuitViewer({ manifest, visibleDevices, inspect }: {
         <button aria-label="Zoom in circuit" disabled={zoom >= 2} onClick={() => setZoom(value => value + .25)}><Plus size={16}/></button>
         <button aria-label="Reset circuit view" title="Reset zoom, scroll and signal trace" onClick={resetView}><RotateCcw size={16}/></button>
       </div>
-      <button className="circuit-export" title="Export logical signal connections, not a physical PCB design" onClick={download}><Download size={16}/>KiCad netlist</button>
     </div>
     <p className="meta circuit-note">The diagram shows the declared signal wiring. Dots mark wire connections. Other wire crossings stay separate. Scroll to view the circuit or select a signal to trace it.</p>
     {manifest.buses.map(bus => <p className="meta" key={bus.id}>{bus.id}: I2C{bus.controller} / SDA GPIO{bus.sda} / SCL GPIO{bus.scl} / {bus.frequencyHz / 1000} kHz</p>)}
@@ -103,11 +96,10 @@ export function CircuitViewer({ manifest, visibleDevices, inspect }: {
     {selected !== null && <div className="circuit-trace" role="status"><b>{nets.find(net => net.gpio === selected)?.name}</b>
       {parts.filter(part => part.terminals.some(port => port.gpio === selected)).map(part => <span key={part.ref}>{part.label}: {part.terminals.filter(port => port.gpio === selected).map(port => port.signal).join(', ')}</span>)}
     </div>}
-    <details><summary>Wiring reference and export pin mapping</summary>
-      <p className="meta">KiCad export uses generic connectors. J1 represents ESP32 GPIOs. J2 onward represent devices. The numbers below identify logical terminals. Map them to physical pads and assign footprints yourself. Add power, ground, pull-ups and protection before making hardware.</p>
+    <details><summary>Wiring reference</summary>
       {[controller, ...parts.filter(part => visibleDevices.has(part.id))].map(part => <article className="circuit-reference" key={part.ref}>
-        <b>{part.ref} / {part.label}</b><span className="meta">{part.id} / {part.description}</span>
-        <div>{part.terminals.map(port => <span key={port.pin}>{port.pin}: {port.signal} on GPIO{port.gpio}</span>)}</div>
+        <b>{part.label}</b><span className="meta">{part.id} / {part.description}</span>
+        <div>{part.terminals.map(port => <span key={port.pin}>{port.signal} on GPIO{port.gpio}</span>)}</div>
       </article>)}
     </details>
   </section>;

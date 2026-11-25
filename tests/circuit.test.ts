@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { circuitConnections, exportKicadNetlist } from '../shared/circuit';
+import { circuitConnections } from '../shared/circuit';
 import { DEMO_MANIFEST, EMPTY_MANIFEST, ProjectManifestSchema } from '../shared/manifest';
 import { ESP32_CAM_SIGNALS, isSensor, wiredPins } from '../shared/registry';
 
@@ -38,67 +38,11 @@ test('every device terminal belongs to exactly its declared GPIO net', () => {
   }
 });
 
-test('KiCad export preserves nets, unique connector references and escapes user labels', () => {
-  const manifest = ProjectManifestSchema.parse({ v: 1, target: 'esp32', devices: [
-    { id: 'esp32', label: 'LED "quoted" \\ test', type: 'led', pin: 2 },
-    { id: 'observer', type: 'probe', pin: 2 },
-  ] });
-  const exported = exportKicadNetlist(manifest);
-  assert.match(exported, /^\(export \(version "E"\)/);
-  assert.equal((exported.match(/\(comp \(ref /g) ?? []).length, 3);
-  assert.equal((exported.match(/\(net \(code /g) ?? []).length, 1);
-  for (const ref of ['J1', 'J2', 'J3']) assert.ok(exported.includes(`(node (ref "${ref}") (pin "1")`));
-  assert.ok(exported.includes('LED \\"quoted\\" \\\\ test'));
-  assert.ok(!exported.includes('(footprint'));
-  assert.equal((exportKicadNetlist(EMPTY_MANIFEST).match(/\(comp /g) ?? []).length, 0);
-});
-
 test('full-size circuits keep all terminals and LCD backpacks share the declared I2C bus', () => {
   const probes = ProjectManifestSchema.parse({ v: 1, target: 'esp32', devices: Array.from({ length: 32 }, (_, index) => ({ type: 'probe', id: `probe_${index}`, pin: 2 })) });
   const { parts, nets } = circuitConnections(probes);
   assert.equal(parts.length, 32);
   assert.equal(nets[0].nodes.length, 33);
-  assert.equal((exportKicadNetlist(probes).match(/\(node /g) ?? []).length, 33);
   const lcd = ProjectManifestSchema.parse({ ...EMPTY_MANIFEST, buses: DEMO_MANIFEST.buses, devices: [{ type: 'hd44780', id: 'lcd', bus: 'i2c0', address: 39 }] });
   assert.deepEqual(circuitConnections(lcd).parts[0].terminals.map(port => [port.signal, port.gpio]), [['SDA', 21], ['SCL', 22]]);
-});
-
-test('KiCad netlist parses as complete S-expressions and each node resolves to a component terminal', () => {
-  type Expression = string | Expression[];
-  const manifest = ProjectManifestSchema.parse({ ...DEMO_MANIFEST, devices: DEMO_MANIFEST.devices.map(device => ({ ...device, label: 'Label "with" \\ escapes\tand\nlines' })) });
-  const tokens = exportKicadNetlist(manifest).match(/"(?:\\.|[^"\\])*"|[()]|[^\s()]+/g)!;
-  let index = 0;
-  function read(): Expression {
-    const token = tokens[index++];
-    assert.ok(token, 'Unexpected end of netlist');
-    if (token !== '(') {
-      assert.notEqual(token, ')');
-      return token.startsWith('"') ? JSON.parse(token) as string : token;
-    }
-    const list: Expression[] = [];
-    while (tokens[index] !== ')') list.push(read());
-    index++;
-    return list;
-  }
-  function children(expression: Expression, name: string): Expression[][] {
-    assert.ok(Array.isArray(expression));
-    return expression.filter((child): child is Expression[] => Array.isArray(child) && child[0] === name);
-  }
-  function field(expression: Expression, name: string): Expression {
-    const child = children(expression, name)[0];
-    assert.ok(child, `Missing ${name}`);
-    return child[1];
-  }
-  const tree = read();
-  assert.equal(index, tokens.length, 'Trailing netlist tokens');
-  assert.ok(Array.isArray(tree));
-  assert.equal(tree[0], 'export');
-  const components = children(children(tree, 'components')[0], 'comp');
-  const { controller, parts, nets } = circuitConnections(manifest);
-  assert.deepEqual(components.map(component => field(component, 'ref')), [controller, ...parts].map(part => part.ref));
-  const exportedNets = children(children(tree, 'nets')[0], 'net');
-  assert.deepEqual(exportedNets.map(net => field(net, 'name')), nets.map(net => net.name));
-  for (const [index, net] of exportedNets.entries()) {
-    assert.deepEqual(children(net, 'node').map(node => [field(node, 'ref'), field(node, 'pin'), field(node, 'pinfunction')]), nets[index].nodes.map(node => [node.ref, node.pin, node.signal]));
-  }
 });

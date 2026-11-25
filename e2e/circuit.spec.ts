@@ -1,6 +1,6 @@
 import { test, expect, type Page } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
-import { circuitConnections, exportKicadNetlist } from '../shared/circuit';
+import { circuitConnections } from '../shared/circuit';
 import { DEMO_MANIFEST, EMPTY_MANIFEST, ProjectManifestSchema, type ProjectManifest } from '../shared/manifest';
 import { ProjectStateSchema } from '../shared/runtime';
 
@@ -20,7 +20,7 @@ async function openCircuit(page: Page, manifest: ProjectManifest) {
   await expect(page.getByRole('region', { name: 'Circuit wiring', exact: true })).toBeVisible();
 }
 
-test('pin-level diagram joins shared buses and probes, traces signals and exports full connectivity', async ({ page }, info) => {
+test('pin-level diagram joins shared buses and probes, traces signals and keeps the JSON export', async ({ page }, info) => {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
   page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
@@ -45,11 +45,7 @@ test('pin-level diagram joins shared buses and probes, traces signals and export
   await viewer.getByRole('button', { name: 'Zoom in circuit' }).click();
   expect(Number(await viewer.locator('.circuit-diagram').getAttribute('width'))).toBe(Number(original) * 1.25);
   await viewer.getByRole('button', { name: 'Reset circuit view' }).click();
-  const download = page.waitForEvent('download');
-  await viewer.getByRole('button', { name: 'KiCad netlist' }).click();
-  const file = await download;
-  expect(file.suggestedFilename()).toBe('espemu.net');
-  expect(await readFile((await file.path())!, 'utf8')).toBe(exportKicadNetlist(DEMO_MANIFEST));
+  await expect(viewer.getByRole('button', { name: /netlist/i })).toHaveCount(0);
   const jsonDownload = page.waitForEvent('download');
   await page.getByRole('button', { name: 'Export circuit', exact: true }).click();
   expect(JSON.parse(await readFile((await (await jsonDownload).path())!, 'utf8')).devices).toEqual(DEMO_MANIFEST.devices);
