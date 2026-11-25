@@ -59,6 +59,7 @@ or a precise blocker. Not-applicable rows need a reason, not a fabricated pass.
 - [ ] Reconnect/backpressure and source-owned process cleanup tested where touched.
 - [ ] Browser controls reach actual model/firmware state and failure states remain truthful.
 - [ ] Desktop and mobile screenshots show readable nonoverlapping labels/controls.
+- [ ] The PR links UI screenshots for its head commit, or its body says why they are missing.
 - [ ] Three.js/canvas scenes are nonblank, framed, interactive/moving, with loaded assets.
 - [ ] Active-run topology remains fixed unless changing it was explicitly requested.
 

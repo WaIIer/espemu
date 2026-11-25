@@ -172,7 +172,8 @@ For a new control/readout/scene check:
    differently. A blank but mounted canvas is a failure.
 
 Trace/screenshots are under the configured `test-results` outputs. Keep them
-ignored; report findings/evidence without committing screenshots accidentally.
+out of commits. Link the UI screenshots from the PR as
+[the pre-PR skill](../espemu-pre-pr/SKILL.md#ui-screenshots-on-the-pr) describes.
 
 ## 5. Full Native And Container Acceptance
 

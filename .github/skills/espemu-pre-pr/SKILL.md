@@ -72,7 +72,7 @@ repository/CI gates and request for any additional required acceptance.
 | SDK/public headers/dependency | Actual IDF compile, C/C++ inclusion/linkage, short init/read API, independent numeric output vectors, bus/invalid errors, no partial output, packaged files/license/pins |
 | Project artifacts/creator/Make | Correct new examples/macros/dependency copies, fresh generated project build, preservation/symlinks/stale atomic update, compact free-resource prompts, create-only/add-only and quoting/migration |
 | Runtime/HTTP/WebSocket/scenarios | Actual/model state path, strict input/ack errors, stale epoch/reset/pause, scenario/manual cancellation, reconnect/backpressure, bounded payload/history/queue |
-| Frontend/visualization | Build/typecheck, browser functional assertions, actual model/firmware updates, disabled/error/null states, desktop/mobile screenshots and nonblank/moving canvas when relevant |
+| Frontend/visualization | Build/typecheck, browser functional assertions, actual model/firmware updates, disabled/error/null states, desktop/mobile screenshots posted on the PR (section 6) and nonblank/moving canvas when relevant |
 | GPIO/RMT | Actual hardware registers/waveforms, polarity/pulls/direction/IRQ/reset, pixel order/completion/multi-instance limits; not UART inference |
 | Build/CI/Docker | Changed input reaches build image, pins/permissions correct, fresh authoritative patch applies/compiles, required native/container execution succeeds |
 | Shared data/memory/streaming | Bounds/backpressure tests and required ten-minute soak on relevant final source |
@@ -138,7 +138,41 @@ Reviewer attention areas and known limitations
 Do not state "all tests passed" unless the complete relevant suite actually did.
 Do not copy metrics from earlier support documentation. Clearly distinguish
 local equivalents from remote required checks. Keep screenshots/logs/binaries
-ignored unless a task explicitly requests a tracked artifact.
+out of the source tree; link UI screenshots from the PR as described below.
+
+### UI screenshots on the PR
+
+Every PR that changes what the web UI shows must link to screenshots of the
+change. Post links, not embedded images.
+
+1. Check for a browser by launching it:
+   `node -e "require('@playwright/test').chromium.launch().then(browser => browser.close())"`
+   with `PLAYWRIGHT_BROWSERS_PATH` set as for the browser tests, or try the
+   browser tools. Then run the affected browser tests on the PR head.
+2. With a browser, capture each changed view at desktop width and at 375 px.
+   Include before and after shots when the change alters an existing layout.
+   Look at every image before linking it.
+3. When the environment already hosts its screenshots, as the GitHub cloud agent
+   does, add a "Screenshots" list to the PR body with one Markdown link per
+   image, captioned with the view and width, such as "Camera wiring, 320 px".
+4. Otherwise, open or update the PR, then upload the images and post their links:
+
+   ```bash
+   bash .github/skills/espemu-pre-pr/scripts/pr-screenshots.sh --repo OWNER/REPO --pr NUMBER \
+     test-results/creator/.../web-setup-desktop.png="Creator, desktop" \
+     test-results/creator/.../web-setup-mobile.png="Creator, 375 px"
+   ```
+
+   The helper stores the images on the `pr-screenshots` branch through the
+   GitHub API and posts one comment with a link to each, for the PR head commit.
+   It never touches the worktree, the index or the feature branch.
+   `--dry-run --sha SHA` prints the comment without contacting GitHub.
+5. Without a browser, or when the upload fails, still open or update the PR.
+   Add a "Screenshots" line to the PR body that says they are missing and why,
+   for example "Screenshots: not captured, no browser in this environment."
+   A missing browser never blocks posting the PR.
+6. After pushing a new head that changes the UI again, link new screenshots for
+   that head.
 
 ## 7. Readiness Decision And Delivery
 
