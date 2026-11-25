@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Copy, Cpu, Download, Pencil, Plus, Trash2, Undo2 } from 'lucide-react';
-import { NewProjectCard, useCreatorSession } from './CreatorSession';
+import { CreateProjectCard, NewProjectCard, useCreatorSession, useNewProject } from './CreatorSession';
 import { z } from 'zod';
 import { DEMO_MANIFEST, EMPTY_MANIFEST, ProjectManifestSchema, type ProjectManifest } from '../../shared/manifest';
 import { ProjectCreatorConfigSchema, type ProjectCreatorConfig } from '../../shared/project-creator';
@@ -20,7 +20,7 @@ type CreatorDraft = z.infer<typeof DraftSchema>;
 const emptyDraft: CreatorDraft = { v: 1, starter: 'empty', language: 'c', manifestText: json(EMPTY_MANIFEST), lastValid: EMPTY_MANIFEST, blinkId: 'status_led', interval: '500' };
 function loadDraft() {
   try { const saved = localStorage.getItem(draftKey);return { draft: saved ? DraftSchema.parse(JSON.parse(saved)) : emptyDraft, error: '' }; }
-  catch { return { draft: emptyDraft, error: 'Saved draft could not be restored. Your current edits remain available to export.' }; }
+  catch { return { draft: emptyDraft, error: 'The saved draft could not be loaded. Your current edits are still here and can be exported.' }; }
 }
 
 function DeviceForm({ manifest, editing, save, cancel }: { manifest: ProjectManifest; editing?: ProjectManifest['devices'][number]; save: (value: ProjectManifest, id: string) => void; cancel: () => void }) {
@@ -83,14 +83,14 @@ function DeviceForm({ manifest, editing, save, cancel }: { manifest: ProjectMani
     } catch (failure) { setError(failureText(failure)); }
   }
 
-  return <section className="creator-card" aria-label={editing?`Edit ${editing.id}`:'Add peripheral'}>
-    <h2>{editing?<Pencil size={17}/>:<Plus size={17} />}{editing?'Edit peripheral':'Add peripheral'}</h2>
-    <label>Peripheral type<select value={type} disabled={!!editing} onChange={event => { setType(event.target.value as DeviceType); setError(null); }}>
+  return <section className="creator-card" aria-label={editing?`Edit ${editing.id}`:'Add device'}>
+    <h2>{editing?<Pencil size={17}/>:<Plus size={17} />}{editing?'Edit device':'Add device'}</h2>
+    <label>Device type<select value={type} disabled={!!editing} onChange={event => { setType(event.target.value as DeviceType); setError(null); }}>
       {PERIPHERAL_GROUPS.map(group => <optgroup key={group} label={group}>{(Object.keys(PERIPHERAL_REGISTRY) as DeviceType[]).filter(value => peripheralGroup(value) === group).map(value => <option key={value} value={value}>{PERIPHERAL_REGISTRY[value].label}</option>)}</optgroup>)}
     </select></label>
     <form key={`${type}:${json(manifest.devices)}:${json(manifest.buses)}`} onSubmit={submit}>
       <div className="creator-fields">
-        <label>Instance id<input name="id" defaultValue={editing?.id??suggestedId} required pattern={String.raw`[a-zA-Z0-9_\-]{1,50}`} maxLength={50} /></label>
+        <label>Device id<input name="id" defaultValue={editing?.id??suggestedId} required pattern={String.raw`[a-zA-Z0-9_\-]{1,50}`} maxLength={50} /></label>
         <label>Label (optional)<input name="label" defaultValue={editing?.label??''} maxLength={40} /></label>
         {sensor && <label>I2C address<select name="address" required defaultValue={editing&&isSensor(editing)?editing.address:availableAddresses[0]}>
           {availableAddresses.map(address => <option key={address} value={address}>0x{address.toString(16)}</option>)}
@@ -110,9 +110,9 @@ function DeviceForm({ manifest, editing, save, cancel }: { manifest: ProjectMani
           <input name={name} type="number" min={control.minimum} max={control.maximum} step="any" defaultValue={Number(manifest.inputs[editing?.id??'']?.[name]??control.initial)} required />
         </label>)}
       </div>
-      {sensor && <p className="meta">I2C0 uses SDA21 / SCL22. Adding a sensor declares this bus automatically.</p>}
-      {camera && <p className="meta">Uses AI-Thinker ESP32-CAM wiring: SCCB on GPIO26/27, D0-D7 on GPIO5, 18, 19, 21, 36, 39, 34, 35, VSYNC 25, HREF 23, PCLK 22, XCLK 0, PWDN 32. GPIO21/22 carry camera data, so I2C0 sensors cannot share this board. One camera per project.</p>}
-      {unavailable && <p className="meta">No available wiring or device slots for this peripheral.</p>}
+      {sensor && <p className="meta">Sensors share I2C0 on SDA GPIO21 and SCL GPIO22. Adding a sensor declares this bus.</p>}
+      {camera && <p className="meta">The camera uses AI-Thinker ESP32-CAM wiring. SCCB is on GPIO26 and GPIO27, D0 to D7 on GPIO5, 18, 19, 21, 36, 39, 34 and 35, VSYNC on 25, HREF on 23, PCLK on 22, XCLK on 0 and PWDN on 32. GPIO21 and GPIO22 carry camera data, so the project cannot have I2C0 sensors. A project can have one camera.</p>}
+      {unavailable && <p className="meta">No free pins, addresses or slots are left for this device.</p>}
       {error && <p className="inline-error" role="alert">{error}</p>}
       <button className="primary-button" type="submit" disabled={unavailable}>{editing?<Pencil size={16}/>:<Plus size={16}/>}{editing?'Save device':'Add device'}</button>{editing&&<button type="button" onClick={cancel}>Cancel</button>}
     </form>
@@ -133,7 +133,7 @@ export function ProjectCreator() {
   useEffect(()=>{
     if(draft===initial.draft)return;
     try { localStorage.setItem(draftKey,JSON.stringify(draft));setStorageError(''); }
-    catch { setStorageError('Draft storage is unavailable. Download the configuration before leaving.'); }
+    catch { setStorageError('This browser cannot save the draft. Download the configuration before you leave the page.'); }
   },[draft,initial]);
 
   let manifest: ProjectManifest | null = null;
@@ -147,6 +147,7 @@ export function ProjectCreator() {
     });
   } catch (failure) { error = failureText(failure); }
   const exported = config ? JSON.stringify(config) : '';
+  const project = useNewProject(session, setSession, exported);
   function updateManifest(next: ProjectManifest, replacementId?: string) {
     setDraft({...draft,lastValid:next,manifestText:json(next),blinkId:editId===blinkId&&replacementId?replacementId:blinkId});setEditId('');setCopyStatus(null);
   }
@@ -170,7 +171,7 @@ export function ProjectCreator() {
     }));
   }
   function editJSON(text: string) {
-    if(text.length>maxDraftLength){setDraftError('Circuit JSON exceeds 1 MiB of text. The previous draft is unchanged.');return;}
+    if(text.length>maxDraftLength){setDraftError('The circuit JSON is larger than 1 MiB. The previous draft is unchanged.');return;}
     setDraftError('');
     const next = { ...draft, manifestText: text };
     try { next.lastValid = ProjectManifestSchema.parse(JSON.parse(text)); } catch { /* Retain the last valid circuit. */ }
@@ -183,7 +184,7 @@ export function ProjectCreator() {
   async function open(file: File) {
     setFileError('');
     try {
-      if(file.size>1024*1024)throw new Error('Project configuration exceeds 1 MiB.');
+      if(file.size>1024*1024)throw new Error('The project configuration is larger than 1 MiB.');
       const raw:unknown=JSON.parse(await file.text());
       if(ProjectManifestSchema.safeParse(raw).success)throw new Error('This is a circuit manifest, not a project configuration.');
       const next=ProjectCreatorConfigSchema.parse(raw);
@@ -194,26 +195,26 @@ export function ProjectCreator() {
   async function copy() {
     if (!exported) return;
     try {
-      if (!navigator.clipboard) throw new Error('Clipboard access is unavailable.');
+      if (!navigator.clipboard) throw new Error('This browser blocked clipboard access.');
       await navigator.clipboard.writeText(exported);
       setCopyStatus('JSON copied.');
     } catch (failure) {
       output.current?.focus();
       output.current?.select();
-      setCopyStatus(`${failure instanceof Error ? failure.message : 'Copy failed.'} JSON selected; copy it manually.`);
+      setCopyStatus(`Copying failed. ${failure instanceof Error ? failure.message.replace(/\.$/, '') : 'The browser refused'}. The JSON is selected, so press Ctrl+C to copy it.`);
     }
   }
 
   return <div className="app-shell">
-    <header className="app-header"><div className="brand"><div className="brand-mark"><Cpu size={23} /></div><div><h1>ESPEmu</h1><span>Project Creator</span></div></div>
+    <header className="app-header"><div className="brand"><div className="brand-mark"><Cpu size={23} /></div><div><h1>ESPEmu</h1><span>Project creator</span></div></div>
       <div className="runtime-tools">{!session && <a href="/">Workbench</a>}<ThemeControls theme={theme} onChange={setTheme} /></div>
     </header>
     <main className="creator-main">
-      <div className="creator-heading"><h2>Create a local ESP-IDF project</h2><p>{session ? 'Name the project, choose where it goes, design the circuit, then press Create project. The setup command in your terminal creates it on this computer.' : 'No active session, firmware build, or QEMU connection required. Everything stays in your browser until you run setup locally.'}</p></div>
-      <div className="creator-layout"><div>
-        {session && <NewProjectCard session={session} setSession={setSession} exported={exported} valid={!!config}/>}
+      <div className="creator-heading"><h2>Create an ESP-IDF project</h2><p>{session ? 'Name the project, choose its folder and add devices. Then press Create project at the end of the page.' : 'Design a project here, then create it with the espemu command. This page saves your draft in the browser and sends nothing to a server.'}</p></div>
+      <div className={project ? 'creator-layout creator-layout-single' : 'creator-layout'}><div>
+        {project && <NewProjectCard project={project}/>}
         <section className="creator-card">
-          <h2>Starter project</h2>
+          <h2>Starter</h2>
           <div className="creator-fields">
             <label htmlFor="creator-starter">Starter<select id="creator-starter" aria-label="Starter" value={starter} onChange={event => selectStarter(event.target.value as ProjectCreatorConfig['starter'])}>
               <option value="empty">Empty</option><option value="blinky">Blinky</option><option value="demo">All-device demo</option>
@@ -232,27 +233,29 @@ export function ProjectCreator() {
         </section>
         {manifest && <DeviceForm key={editId} manifest={manifest} editing={manifest.devices.find(device=>device.id===editId)} save={updateManifest} cancel={()=>setEditId('')}/>}
         <section className="creator-card">
-          <h2>Circuit devices</h2>
-          {!(manifest??lastValid).devices.length && <p>No devices declared.</p>}
+          <h2>Devices</h2>
+          {!(manifest??lastValid).devices.length && <p>The circuit has no devices yet.</p>}
           {(manifest??lastValid).devices.map(device => <div className="creator-device" key={device.id}><span><strong>{device.id}</strong> / {device.type}<small>{isSensor(device) ? `${device.bus} / 0x${device.address.toString(16)}` : device.type === 'max7219' ? wiredPins(device).map((pin,index)=>`${['DIN','CLK','LOAD'][index]} GPIO${pin}`).join(', ') : `GPIO ${wiredPins(device).join(', ')}`}</small></span>
             <div><button type="button" className="icon-button" aria-label={`Edit ${device.id}`} disabled={!manifest} onClick={() => setEditId(device.id)}><Pencil size={16} /></button><button type="button" className="icon-button" aria-label={`Remove ${device.id}`} disabled={!manifest} onClick={() => removeDevice(device.id)}><Trash2 size={16} /></button></div></div>)}
         </section>
-        <details className="creator-card"><summary>Advanced circuit configuration</summary>
+        <details className="creator-card"><summary>Edit the circuit as JSON</summary>
           <label htmlFor="creator-circuit">Circuit JSON<textarea id="creator-circuit" aria-label="Circuit JSON" rows={16} spellCheck={false} value={manifestText} onChange={event => editJSON(event.target.value)} /></label>
         </details>
-      </div><section className="creator-card creator-export">
+        {project && (draftError||error||fileError||storageError) && <p className="inline-error" role="alert">{fileError||draftError||error||storageError}</p>}
+        {project && <CreateProjectCard project={project} valid={!!config}/>}
+      </div>{!project && <section className="creator-card creator-export">
         <h2>Project configuration</h2>
-        <p>Save this JSON as <code>project-config.json</code>, then run from the ESPEmu checkout:</p>
-        <pre>bash tools/setup-project.sh my_project --config project-config.json</pre>
-        <p>Or pass the JSON string as a quoted argument to <code>--config-json</code>. Use <code>--config -</code> to read it from stdin.</p>
+        <p>Save this JSON as <code>project-config.json</code> and run:</p>
+        <pre>espemu new my_project --config project-config.json</pre>
+        <p>You can also pass the JSON text with <code>--config-json</code>, or pipe it to <code>--config -</code>.</p>
         {(draftError||error||fileError||storageError) && <p className="inline-error" role="alert">{fileError||draftError||error||storageError}</p>}
         <label>Open project configuration<input type="file" accept=".json,application/json" onChange={event=>{const file=event.currentTarget.files?.[0];event.currentTarget.value='';if(file)void open(file);}}/></label>
         <label htmlFor="creator-output">Project JSON<textarea id="creator-output" aria-label="Project JSON" ref={output} readOnly rows={14} spellCheck={false} value={exported} onFocus={event => event.currentTarget.select()} /></label>
         <button type="button" className="primary-button" disabled={!config} onClick={() => void copy()}><Copy size={16} />Copy JSON</button>
         <button type="button" className="primary-button" disabled={!config} onClick={download}><Download size={16}/>Download JSON</button>
         {copyStatus && <p role="status">{copyStatus}</p>}
-        <p className="meta">Setup creates files only by default and refuses nonempty folders. Add --no-run to build or --run to build and launch explicitly. The exported configuration is not the circuit-only espemu.json.</p>
-      </section></div>
+        <p className="meta">The command creates the files and stops. It refuses a folder that is not empty. Add <code>--no-run</code> to also build the firmware, or <code>--run</code> to build it and start the workbench. This file describes the whole project. It is not the project's <code>espemu.json</code>.</p>
+      </section>}</div>
     </main>
   </div>;
 }

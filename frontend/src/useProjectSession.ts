@@ -30,14 +30,14 @@ export function useProjectSession() {
         if(!active())return;
         try{
           const message=JSON.parse(String(event.data));
-          if(message.v!==1)throw new Error('Unsupported server protocol');
+          if(message.v!==1)throw new Error('The backend uses a different protocol version. Reload the page.');
           if(message.type==='state'){
             const value=ProjectStateSchema.parse(message.state);
             const previous=current.current;
             if(previous&&value.sessionId!==previous.sessionId){next.close();return;}
             if(previous&&value.epoch<previous.epoch)return;
             if(!previous){clearTimeout(handshake);attempt=0;setConnection('online');setError(null);}
-            else if(value.epoch>previous.epoch)reject('Guest reset before acknowledgement',value.epoch);
+            else if(value.epoch>previous.epoch)reject('The firmware reset before the command was acknowledged.',value.epoch);
             current.current=value;setState(value);
           }else if(message.type==='audio'){
             const audio=AudioMessageSchema.parse(message);
@@ -49,10 +49,10 @@ export function useProjectSession() {
             clearTimeout(waiting.timer);pending.current.delete(ack.id);
             if(ack.ok)waiting.resolve();else waiting.reject(new Error(ack.error??'Command rejected'));
           }
-        }catch(failure){setError(failure instanceof Error?failure.message:'Invalid server message');}
+        }catch(failure){setError(failure instanceof Error?failure.message:'The backend sent an invalid message.');}
       };
       next.onclose=()=>{if(!active())return;clearTimeout(handshake);socket.current=null;current.current=null;setConnection('offline');reject('Connection lost');if(attempt++<8)retry=setTimeout(connect,Math.min(8000,500*2**attempt));};
-      next.onerror=()=>{if(active())setError('WebSocket connection failed');};
+      next.onerror=()=>{if(active())setError('Cannot connect to the workbench backend.');};
     };
     retryNow.current=()=>{if(!socket.current){attempt=0;connect();}};
     connect();
@@ -70,15 +70,15 @@ export function useProjectSession() {
   }
   function transmit(payload:Payload, epoch?:number):Promise<void>{
     const next=socket.current, active=current.current;
-    if(next?.readyState!==WebSocket.OPEN||!active||next!==renderedSocket||state?.sessionId!==active.sessionId)throw new Error('No live project connection');
+    if(next?.readyState!==WebSocket.OPEN||!active||next!==renderedSocket||state?.sessionId!==active.sessionId)throw new Error('Not connected to the workbench backend');
     if((epoch??state.epoch)!==active.epoch)throw new Error('Stale reset epoch');
-    if(pending.current.size>=8||next.bufferedAmount>64*1024)throw new Error('Command queue is busy');
+    if(pending.current.size>=8||next.bufferedAmount>64*1024)throw new Error('Too many commands are waiting. Try again.');
     const command=RuntimeCommandSchema.parse({...payload,v:1,id:crypto.randomUUID(),epoch:active.epoch,sessionId:active.sessionId});
     return new Promise((resolve,reject)=>{
       const timer=setTimeout(()=>{
         pending.current.delete(command.id);
         if(socket.current===next){current.current=null;setConnection('synchronizing');next.close();}
-        reject(new Error('Acknowledgement timed out; reconnecting to check the result'));
+        reject(new Error('The command was not acknowledged in time. Reconnecting to check the result.'));
       },8000);
       pending.current.set(command.id,{epoch:command.epoch,resolve,reject,timer});
       try{next.send(JSON.stringify(command));}catch(error){clearTimeout(timer);pending.current.delete(command.id);reject(error);}

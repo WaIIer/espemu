@@ -157,7 +157,7 @@ test('Roomguard workbench commits once, shows live comparisons, and reconnects a
     await page.getByRole('button', { name: 'stop', exact: true }).click();
     await expect(page.locator('.phase')).toHaveText('stopped');
     await temperature.fill('-5');
-    await page.getByRole('heading', { name: 'Physical Inputs' }).click();
+    await page.getByRole('heading', { name: 'Physical inputs' }).click();
     await expect(temperature).toHaveValue('-5');
     await expect(page.locator('.header-session')).toContainText('Staged');
     await page.getByRole('button', { name: 'run', exact: true }).click();

@@ -25,7 +25,7 @@ export function LcdPanel({ device, model }: { device: Extract<CircuitDevice, { t
           </span>))}
       </div>
     </div>
-    <p className="meta">{!state ? 'Waiting for QEMU' : state.status === 'disconnected' ? 'Disconnected: transfers NACK' :
+    <p className="meta">{!state ? 'Waiting for QEMU' : state.status === 'disconnected' ? 'Disconnected. The backpack NACKs every transfer.' :
       `${state.displayOn ? 'Display on' : 'Display off'} · backlight ${state.backlight ? 'on' : 'off'} · ${state.eightBit ? '8-bit' : '4-bit'} · ${state.instructions} instructions, ${state.dataWrites} characters`}</p>
     {!!state?.ignoredWhileBusy && <p className="field-error" role="status">{state.ignoredWhileBusy} transfers arrived while the controller was busy and were ignored. Wait 1.52 ms after clear/home.</p>}
   </section>;

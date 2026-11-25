@@ -25,7 +25,7 @@ export function PeripheralsPanel({ state, disabled, send, sendPin, filter, disco
       if (payload.action === 'gpio-inputs') await send(payload, state?.epoch);
       else await sendPin?.(payload, state?.epoch);
     }
-    catch (failure) { setError(failure instanceof Error ? failure.message : 'Peripheral command failed'); }
+    catch (failure) { setError(failure instanceof Error ? failure.message : 'The device command failed'); }
   }
   function level(pin: number, requested: 0 | 1 | null) {
     if (sendPin) { void perform({ action: 'gpio-pin', input: { pin, level: requested } }); return; }
@@ -39,8 +39,8 @@ export function PeripheralsPanel({ state, disabled, send, sendPin, filter, disco
     if (sendPin) void perform({ action: 'gpio-momentary', deviceId: device.id, pressed: down });
     else level(device.pin, digitalInputLevel(device.kind as DeviceType, device.activeLow, down, 'pullUp' in device && device.pullUp === true));
   }
-  return <section className="peripheral-panel" aria-label="GPIO peripherals">
-    <div className="peripheral-toolbar"><h2><Lightbulb size={17} />Peripherals</h2></div>
+  return <section className="peripheral-panel" aria-label="GPIO devices">
+    <div className="peripheral-toolbar"><h2><Lightbulb size={17} />Devices</h2></div>
     {(error || state?.gpioError) && <div role="alert" className="field-error">{error ?? state?.gpioError}</div>}
     {state?.ws2812?.error&&<div role="alert" className="field-error">{state.ws2812.error}</div>}
     <div className="peripheral-grid">{devices.map(original => {
@@ -71,7 +71,7 @@ export function PeripheralsPanel({ state, disabled, send, sendPin, filter, disco
           : family === 'switch' ? <label className="gpio-switch"><ToggleLeft size={22} /><input aria-label={`Toggle ${device.label}`} type="checkbox" checked={inputLevel === (device.activeLow ? 0 : 1)} disabled={disabled || !state?.gpio} onChange={event => level(pin, digitalInputLevel(device.kind as DeviceType, device.activeLow, event.target.checked, 'pullUp' in device && device.pullUp === true))} /></label>
           : <><Activity size={25} /><strong className="pin-state">{inputLevel == null ? '?' : inputLevel ? 'HIGH' : 'LOW'}</strong></>}
           {family !== 'led' && family !== 'rgb' && family !== 'ws2812b' && family !== 'matrix' && (family !== 'probe' && pin >= 34 && observations[0] && !observations[0].externallyDriven
-            ? <span className="pin-state" title="Released with no pull resistor: GPIO34-39 have no internal pulls. Declare &quot;pullUp&quot;: true for a module or external pull-up.">FLOATING</span>
+            ? <span className="pin-state" title="Nothing drives this pin and it has no pull resistor. GPIO34 to GPIO39 have no internal pulls. Set &quot;pullUp&quot;: true for a module or board pull-up.">FLOATING</span>
             : <span className="pin-state">{inputLevel == null ? '?' : `PIN ${inputLevel}`}</span>)}
         </div>
         {device.kind==='rgb'&&<div className="rgb-channel-states">{channels.map((channel,index)=><span key={index} title={`GPIO${channel.pin}: ${channel.status==='input'?'configured as input':channel.status}`} data-gpio-channel={['red','green','blue'][index]}>{['R','G','B'][index]} {channel.status.toUpperCase()}</span>)}</div>}
