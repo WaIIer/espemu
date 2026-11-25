@@ -17,7 +17,7 @@
         "test:gate": "node --test tools/gate.test.mjs",
     "test:ci": "node --test tools/ci.test.mjs",
     "test:skills": "node --test tools/agent-skills.test.mjs",
-        "test:fast": "node --import tsx --test --test-concurrency=2 tools/ci.test.mjs tools/agent-skills.test.mjs tests/application.test.ts tests/gpio-protocol.test.ts tests/manifest.test.ts tests/packaging.test.ts tests/project-artifacts.test.ts tests/project-creator.test.ts tests/protocol.test.ts tests/runtime-bounds.test.ts",
+        "test:fast": "node --import tsx --test --test-concurrency=2 tools/ci.test.mjs tools/agent-skills.test.mjs tests/application.test.ts tests/gpio-protocol.test.ts tests/kicad-export.test.ts tests/manifest.test.ts tests/packaging.test.ts tests/project-artifacts.test.ts tests/project-creator.test.ts tests/protocol.test.ts tests/runtime-bounds.test.ts",
         "test:e2e": "playwright test",
         "test:creator": "playwright test --config playwright.creator.config.ts"
     },

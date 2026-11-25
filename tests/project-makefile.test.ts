@@ -18,7 +18,7 @@ test('new projects include a discoverable Makefile and recorded framework path',
     assert.equal(readFileSync(join(directory, '.espemu-framework'), 'utf8').trim(), root);
     const result = spawnSync('make', ['-C', directory, 'help'], { encoding: 'utf8' });
     assert.equal(result.status, 0, result.stderr);
-    for (const target of ['build','run','web','clean','rebuild','configure','validate','tools','add_component','doctor']) assert.ok(result.stdout.includes(`make ${target}`));
+    for (const target of ['build','run','web','clean','rebuild','configure','validate','tools','add_component','doctor','kicad']) assert.ok(result.stdout.includes(`make ${target}`));
   } finally { rmSync(temporary, { recursive: true, force: true }); }
 });
 test('Makefile forwards each command and the exact project directory, including spaces', () => {
@@ -30,7 +30,7 @@ test('Makefile forwards each command and the exact project directory, including 
     mkdirSync(join(framework, 'tools'), { recursive: true });
     writeFileSync(join(framework, 'tools/project-command.sh'), '#!/usr/bin/env bash\nprintf "COMMAND=%s\\nPROJECT=%s\\n" "$1" "$2"\n');
     writeFileSync(join(directory, '.espemu-framework'), framework + '\n');
-    for (const command of ['build','run','web','clean','rebuild','configure','validate','tools','add_component','doctor']) {
+    for (const command of ['build','run','web','clean','rebuild','configure','validate','tools','add_component','doctor','kicad']) {
       const result = spawnSync('make', ['-C', directory, command], { encoding: 'utf8' });
       assert.equal(result.status, 0, result.stderr);
       assert.ok(result.stdout.includes(`COMMAND=${command}`));
@@ -78,7 +78,11 @@ test('only untouched older framework Makefiles receive new project commands',()=
   try{
     create(directory);
     const template=readFileSync(join(root,'templates/project.Makefile'),'utf8');
-    const previous=template.split('\n').filter(line=>!line.includes('make test ')&&!line.includes('DEVICE=TYPE')).join('\n').replaceAll(' add_component doctor test',' add_component doctor');
+    const beforeKicad=template.split('\n').filter(line=>!line.includes('make kicad ')).join('\n').replaceAll(' test kicad',' test');
+    writeFileSync(join(directory,'Makefile'),beforeKicad);
+    assert.equal(spawnSync('bash',[join(root,'tools/setup-project.sh'),directory,'--makefile-only'],{encoding:'utf8'}).status,0);
+    assert.equal(readFileSync(join(directory,'Makefile'),'utf8'),template);
+    const previous=beforeKicad.split('\n').filter(line=>!line.includes('make test ')&&!line.includes('DEVICE=TYPE')).join('\n').replaceAll(' add_component doctor test',' add_component doctor');
     assert.notEqual(previous,template);
     for(const removed of [[], ['doctor'], ['add_component','doctor'], ['docs','editor','add_component','doctor']]){
       const legacy=removed.length?previous.split('\n').filter(line=>!removed.some(command=>line.includes(`make ${command} `))).join('\n').replaceAll(` ${removed.join(' ')}`,''):previous;

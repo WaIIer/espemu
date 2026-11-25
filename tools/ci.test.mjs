@@ -85,7 +85,7 @@ test('the automatic CI job is capped at three minutes and runs only the explicit
   assert.deepEqual(scripts['test:fast'].split(' '), [
     'node', '--import', 'tsx', '--test', '--test-concurrency=2',
     'tools/ci.test.mjs', 'tools/agent-skills.test.mjs', 'tests/application.test.ts',
-    'tests/gpio-protocol.test.ts', 'tests/manifest.test.ts', 'tests/packaging.test.ts', 'tests/project-artifacts.test.ts',
+    'tests/gpio-protocol.test.ts', 'tests/kicad-export.test.ts', 'tests/manifest.test.ts', 'tests/packaging.test.ts', 'tests/project-artifacts.test.ts',
     'tests/project-creator.test.ts', 'tests/protocol.test.ts', 'tests/runtime-bounds.test.ts',
   ]);
 });

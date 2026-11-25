@@ -66,6 +66,30 @@ void app_main(void)
 
 The generated `ESPEMU-DEVICES.md` in each project lists the wiring and the driver calls for its devices. `make docs` refreshes it after you change the circuit.
 
+### Export an electrical schematic
+
+Run `make kicad` in a project to generate `kicad/espemu.kicad_pro` and its
+self-contained KiCad 7+ schematic. Existing projects can install the new target
+with `espemu new PROJECT --makefile-only`; custom Makefiles are preserved. You
+can also run `bash tools/generate-project-artifacts.sh PROJECT --kicad` from the
+framework. Exporting does not compile firmware or change application source.
+
+The export maps BME280, MPU-6050 and SHT3x (a concrete SHT31-DIS) to real KiCad
+symbols and footprints, with address straps, bypass/filter capacitors and shared
+I2C pull-ups. A3144UA Hall sensors have an explicit numbered symbol, separate
+external 5 V supply, bypassing and a **3.3 V** output pull-up; their footprint is
+left for verified physical-part selection. LEDs/RGB LEDs, buttons, switches and passive test points have
+explicit polarity and current-limit/bias circuits. The ESP32-WROOM-32 sheet
+includes externally regulated **3.3 V** power, decoupling, enable/boot circuitry
+and a 3.3 V UART header. This is not a development-board or 5 V power design.
+
+**Unsupported or unsafe devices are omitted, not replaced with generic module
+connectors.** `kicad/export-report.json` identifies every instance, omission
+reason and component pin-to-net mapping; `bom.csv` records parts and their
+purposes. Read the [electrical profiles and limits](docs/kicad-export.md) before
+using the result. Edited KiCad files preserve the entire export bundle rather
+than mixing an old schematic with a new report.
+
 ## Declare a circuit
 
 `espemu.json` sits next to the project's `CMakeLists.txt`. The project creator writes it, and you can also edit it by hand:
