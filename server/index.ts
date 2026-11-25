@@ -7,7 +7,7 @@ import { createBackendServer } from './http.ts';
 export async function main(): Promise<void> {
   const root = fileURLToPath(new URL('../', import.meta.url));
   if (!process.env.ESPEMU_PROJECT && !process.env.ESPEMU_MANIFEST && !process.env.ESPEMU_FLASH)
-    throw new Error('No project selected. Set ESPEMU_PROJECT to a built ESP-IDF project, or run bash tools/demo.sh for the explicit bundled demo.');
+    throw new Error('No project selected. Set ESPEMU_PROJECT to a built ESP-IDF project, or run espemu demo for the bundled demo.');
   const host = process.env.HOST ?? '127.0.0.1';
   const port = Number(process.env.PORT ?? 4000);
   if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error('PORT must be an integer from 1 to 65535');

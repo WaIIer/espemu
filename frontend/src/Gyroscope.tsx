@@ -64,7 +64,7 @@ export function Gyroscope({ device, inputs, model, disabled, epoch, onMotion }: 
     if (acceleration.length() > .01) orientation.current.setFromUnitVectors(acceleration.normalize(), new THREE.Vector3(0, 0, 1));
     let renderer: THREE.WebGLRenderer;
     try { renderer = new THREE.WebGLRenderer({ canvas: canvas.current!, antialias: true, alpha: true, preserveDrawingBuffer: true }); }
-    catch { setFailure('WebGL is unavailable for this sensor view.'); return; }
+    catch { setFailure('This browser has WebGL turned off, so the 3D view cannot load.'); return; }
     renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
     const scene = new THREE.Scene();
     scene.add(new THREE.HemisphereLight(0xffffff, 0x779286, 2.6));
@@ -123,7 +123,7 @@ export function Gyroscope({ device, inputs, model, disabled, epoch, onMotion }: 
     </div>
     {failure && <div role="alert" className="field-error">{failure}</div>}
     <div className="gyro-layout"><div className={`gyro-viewport ${moving ? 'gyro-dragging' : ''}`}><canvas ref={canvas} className="gyro-canvas" data-gyro-id={device.id} role="img" aria-label={`${device.id} draggable gyroscope`} tabIndex={disabled ? -1 : 0} onPointerDown={down} onPointerMove={move} onPointerUp={release} onPointerCancel={stop} onLostPointerCapture={() => { if (pointer.current) stop(); }} onKeyDown={keyboard}/></div>
-      <div className="gyro-readouts"><h3>Angular Rate<span className="unit">deg/s</span></h3>{rates.map((name, index) => <div className="gyro-axis" key={name}><span className={`axis-${index}`}>{['X', 'Y', 'Z'][index]}</span><output aria-label={`${device.id} ${name} motion`}>{Number(inputs[name] ?? 0).toFixed(1)}</output></div>)}<h3>Acceleration<span className="unit">g</span></h3>{acceleration.map((name, index) => <div className="gyro-axis" key={name}><span className={`axis-${index}`}>{['X', 'Y', 'Z'][index]}</span><output aria-label={`${device.id} ${name} motion`}>{Number(inputs[name] ?? (index === 2 ? 1 : 0)).toFixed(3)}</output></div>)}<span className="reading-status">{model?.status ?? 'unavailable'}</span></div>
+      <div className="gyro-readouts"><h3>Angular rate<span className="unit">deg/s</span></h3>{rates.map((name, index) => <div className="gyro-axis" key={name}><span className={`axis-${index}`}>{['X', 'Y', 'Z'][index]}</span><output aria-label={`${device.id} ${name} motion`}>{Number(inputs[name] ?? 0).toFixed(1)}</output></div>)}<h3>Acceleration<span className="unit">g</span></h3>{acceleration.map((name, index) => <div className="gyro-axis" key={name}><span className={`axis-${index}`}>{['X', 'Y', 'Z'][index]}</span><output aria-label={`${device.id} ${name} motion`}>{Number(inputs[name] ?? (index === 2 ? 1 : 0)).toFixed(3)}</output></div>)}<span className="reading-status">{model?.status ?? 'unavailable'}</span></div>
     </div>
   </section>;
 }

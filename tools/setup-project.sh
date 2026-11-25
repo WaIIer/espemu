@@ -6,8 +6,8 @@ if [[ $# -eq 0 || ${1:-} == --guided ]]; then
     exec bash "$ROOT/tools/create-project.sh" "$@"
 fi
 usage() {
-    printf 'Usage: bash tools/setup-project.sh PROJECT_DIRECTORY [--template empty|demo | --web | --config FILE | --config-json JSON] [--init-only|--no-run|--run|--makefile-only]\n'
-    printf '       bash tools/setup-project.sh --web [--init-only|--no-run|--run]\n'
+    printf 'Usage: espemu new PROJECT_DIRECTORY [--template empty|demo | --web | --config FILE | --config-json JSON] [--init-only|--no-run|--run|--makefile-only]\n'
+    printf '       espemu new --web [--init-only|--no-run|--run]\n'
     printf 'Default: create an empty ESP-IDF app and return to the shell.\n'
     printf '  --template demo  Opt in to the all-device firmware example.\n'
     printf '  --web        Design the project, its name and location in the browser creator; files are created when you press Create project.\n'
@@ -130,7 +130,7 @@ if [[ -e "$MARKER" ]]; then
 else
     if [[ -d "$PROJECT_DIR" && -n "$(find "$PROJECT_DIR" -mindepth 1 -maxdepth 1 -print -quit)" ]]; then
         printf 'Directory is not empty; refusing to overwrite it: %s\n' "$PROJECT_DIR" >&2
-        printf 'For an existing ESP-IDF project, use: bash tools/demo.sh "%s"\n' "$PROJECT_DIR" >&2
+        printf 'For an existing ESP-IDF project, use: espemu run "%s"\n' "$PROJECT_DIR" >&2
         exit 2
     fi
     source "$ROOT/tools/env.sh"

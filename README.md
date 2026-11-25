@@ -143,13 +143,16 @@ The generated `ESPEMU-DEVICES.md` contains a starter test.
 
 Running from source needs x86_64 Linux with Git, curl, a C compiler and the usual build tools. The rootless bootstrap reads native library versions from `tools/native-packages.lock`, which targets Ubuntu 26.04 packages. On other distributions, use the container instead.
 
+Link the `espemu` command into a folder on your `PATH`, then run the demo:
+
 ```sh
-bash tools/demo.sh
+ln -s "$PWD/tools/espemu.sh" ~/.local/bin/espemu
+espemu demo
 ```
 
 The first run downloads the pinned toolchains into `.cache`. It then builds QEMU, the demo firmware and the workbench, and starts the server. The command prints the workbench URL, normally `http://127.0.0.1:4000`. Ctrl+C stops the server and QEMU.
 
-From a checkout, `bash tools/setup-project.sh` takes the same arguments as `espemu new`. Generated projects record the checkout's path, so `make build` and `make run` work the same way.
+Projects created with a linked checkout record the checkout's path, so `make build` and `make run` use the checkout.
 
 The container needs a running Docker daemon:
 

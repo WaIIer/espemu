@@ -37,7 +37,7 @@ export function CameraPanel({ device, camera, disabled, running, epoch, send }: 
     if (source !== 'webcam') return;
     let stream: MediaStream | null = null, cancelled = false;
     setError('');
-    if (!navigator.mediaDevices?.getUserMedia) { setError('Webcam capture needs a secure context (localhost or HTTPS)'); setSource('off'); return; }
+    if (!navigator.mediaDevices?.getUserMedia) { setError('Webcam capture needs a secure page. Open the workbench through localhost or HTTPS.'); setSource('off'); return; }
     navigator.mediaDevices.getUserMedia({ video: { width: { ideal: 640 }, height: { ideal: 480 } }, audio: false }).then(media => {
       if (cancelled) { media.getTracks().forEach(track => track.stop()); return; }
       stream = media;
@@ -86,7 +86,7 @@ export function CameraPanel({ device, camera, disabled, running, epoch, send }: 
   }
   const status = !camera ? 'Waiting for QEMU' : !ready ? 'Waiting for firmware to configure the sensor' : camera.status;
   return <section className="runtime-camera" aria-label={`${device.id} camera`} data-device={device.id}>
-    <div className="section-heading"><h2><Camera size={17}/>{device.label ?? device.id}</h2><span className="meta">OV2640 / I2S0 DMA</span></div>
+    <div className="section-heading"><h2><Camera size={17}/>{device.label ?? device.id}</h2><span className="meta">OV2640 on I2S0 DMA</span></div>
     <div className="runtime-device-tools"><label>Image source <select aria-label={`${device.id} image source`} value={source} disabled={disabled} onChange={event => select(event.target.value as Source)}>
       <option value="off">Off</option><option value="pattern">Test pattern</option><option value="webcam">Webcam</option></select></label></div>
     {error && <div className="field-error" role="alert">{error}</div>}
@@ -97,8 +97,8 @@ export function CameraPanel({ device, camera, disabled, running, epoch, send }: 
         <dt>Status</dt><dd data-camera="status">{status}</dd>
         <dt>Sensor output</dt><dd data-camera="sensor">{ready ? `${format?.toUpperCase()} ${width}x${height}` : '--'}</dd>
         <dt>Frames sent</dt><dd>{sent.count}{sent.count > 0 && ` (${sent.bytes} bytes)`}</dd>
-        <dt>Frames to DMA</dt><dd data-camera="delivered">{camera?.framesDelivered ?? 0}</dd>
-        <dt title="The sensor streams continuously; a frame reaches memory only while firmware has DMA running, as on hardware.">Frames not captured</dt><dd>{camera?.framesMissed ?? 0}</dd>
+        <dt>Frames delivered</dt><dd data-camera="delivered">{camera?.framesDelivered ?? 0}</dd>
+        <dt title="The sensor sends frames all the time. A frame reaches memory only while the firmware has DMA running, as on real hardware.">Frames missed</dt><dd>{camera?.framesMissed ?? 0}</dd>
         <dt>DMA</dt><dd data-camera="dma">{camera ? `${camera.dma.bytes} bytes, ${camera.dma.eofInterrupts} EOF${camera.dma.descriptorErrors ? `, ${camera.dma.descriptorErrors} descriptor errors` : ''}` : '--'}</dd>
       </dl>
     </div>

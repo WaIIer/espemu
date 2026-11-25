@@ -288,7 +288,7 @@ export function addComponent(plan: CreatorPlan, root = frameworkRoot) {
 
 export async function main(args = process.argv.slice(2)): Promise<void> {
   if (args.includes('--help') || args.includes('-h')) {
-    console.log('Usage: bash tools/create-project.sh [NEW_OR_EMPTY_DIRECTORY]\n       bash tools/create-project.sh DIRECTORY --config FILE|--config-json JSON [--init-only|--no-run|--run]\n       bash tools/create-project.sh [DIRECTORY] --web [--init-only|--no-run|--run]\n       bash tools/create-project.sh --add-component [PROJECT_DIRECTORY] [--device TYPE|JSON]'); return;
+    console.log('Usage: espemu new [NEW_OR_EMPTY_DIRECTORY]\n       espemu new DIRECTORY --config FILE|--config-json JSON [--init-only|--no-run|--run]\n       espemu new [DIRECTORY] --web [--init-only|--no-run|--run]\n       espemu add_component [PROJECT_DIRECTORY], with DEVICE=TYPE|JSON to skip the questions'); return;
   }
   let plan: CreatorPlan | null;
   const web = args.indexOf('--web');

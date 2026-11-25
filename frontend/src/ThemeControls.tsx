@@ -32,7 +32,7 @@ export function ThemeControls({theme,onChange}:{theme:Theme;onChange:(value:Them
     <Form.Label>Mode</Form.Label><div className="theme-modes" role="group" aria-label="Theme mode">{([{value:'system',icon:<Monitor size={18}/>},{value:'light',icon:<Sun size={18}/>},{value:'dark',icon:<Moon size={18}/>} ] as const).map(mode=><button key={mode.value} title={mode.value} aria-label={`${mode.value} theme`} aria-pressed={theme.mode===mode.value} onClick={()=>onChange({...theme,mode:mode.value})}>{mode.icon}</button>)}</div>
     <div className="theme-color-row"><Form.Label htmlFor="accent-color">Accent</Form.Label><Form.Control id="accent-color" type="color" value={theme.accent} onChange={event=>onChange({...theme,accent:event.target.value})}/></div>
     <div className="theme-color-row"><Form.Label htmlFor="canvas-color">Canvas</Form.Label><Form.Control id="canvas-color" type="color" value={theme.canvas??(theme.mode==='dark'?'#252f28':'#f3f6f4')} onChange={event=>onChange({...theme,canvas:event.target.value})}/></div>
-    <div className="theme-size-row"><Form.Label htmlFor="serial-font-size">Serial Font</Form.Label><output>{theme.serialSize} px</output></div><Form.Range id="serial-font-size" min={11} max={20} step={1} value={theme.serialSize} onChange={event=>onChange({...theme,serialSize:Number(event.target.value)})}/>
+    <div className="theme-size-row"><Form.Label htmlFor="serial-font-size">Serial font</Form.Label><output>{theme.serialSize} px</output></div><Form.Range id="serial-font-size" min={11} max={20} step={1} value={theme.serialSize} onChange={event=>onChange({...theme,serialSize:Number(event.target.value)})}/>
     <button className="theme-reset" onClick={()=>onChange(ThemeSchema.parse({}))}>Reset theme</button>
   </Modal.Body></Modal></>;
 }
