@@ -1,0 +1,38 @@
+.circuit-viewer { min-width: 0; }
+.circuit-viewer p.meta { text-align: left; font-family: inherit; line-height: 1.6; overflow-wrap: anywhere; }
+.circuit-toolbar, .circuit-zoom { display: flex; align-items: center; gap: 8px; }
+.circuit-toolbar { flex-wrap: wrap; margin: 12px 0; }
+.circuit-toolbar label { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; font-size: 12px; min-width: 0; }
+.circuit-toolbar select { max-width: 100%; min-width: 0; }
+.circuit-toolbar button { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 34px; border: 1px solid var(--line); border-radius: 5px; background: var(--paper); color: var(--ink); padding: 6px 9px; }
+.circuit-toolbar button:hover:not(:disabled) { border-color: var(--teal); }
+.circuit-toolbar button:disabled { opacity: .4; }
+.circuit-zoom span { min-width: 38px; text-align: center; font: 11px var(--mono); }
+.circuit-export { margin-left: auto; font-size: 12px; }
+.circuit-note { line-height: 1.6; max-width: 85ch; }
+.circuit-scroll { overflow: auto; max-height: 620px; border: 1px solid var(--line); border-radius: 8px; background: var(--canvas); background-image: radial-gradient(var(--line) .7px, transparent .7px); background-size: 16px 16px; overscroll-behavior: contain; margin: 12px 0; }
+.circuit-diagram { display: block; max-width: none; }
+.circuit-board { fill: var(--paper); stroke: var(--teal); stroke-width: 2; }
+.circuit-controller { fill: var(--ink); font: 600 22px var(--mono); }
+.circuit-caption { fill: var(--muted); font: 11px var(--mono); }
+.circuit-net path { fill: none; stroke-width: 2; }
+.circuit-pin-label, .circuit-signal-label { fill: var(--ink); font: 12px var(--mono); }
+.circuit-gpio-label { fill: var(--muted); font: 11px var(--mono); }
+.circuit-card { fill: var(--paper); stroke: var(--line); stroke-width: 1.5; }
+.circuit-terminal { fill: var(--teal); }
+.circuit-card-heading { display: flex; flex-direction: column; gap: 3px; color: var(--ink); }
+.circuit-card-heading button { padding: 0; border: 0; background: none; color: var(--ink); font-size: 13px; font-weight: 600; text-align: left; overflow-wrap: anywhere; line-height: 1.3; }
+.circuit-card-heading button:hover { text-decoration: underline; }
+.circuit-card-heading span { font: 10px var(--mono); color: var(--muted); overflow-wrap: anywhere; }
+.circuit-dim { opacity: .2; }
+.circuit-trace { display: flex; flex-wrap: wrap; gap: 8px 16px; padding: 10px 0; font: 12px var(--mono); overflow-wrap: anywhere; }
+.circuit-viewer details { font-size: 12px; margin-top: 12px; }
+.circuit-viewer details > p { margin-top: 10px; }
+.circuit-reference { padding: 10px 0; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 4px; overflow-wrap: anywhere; }
+.circuit-reference > div { display: flex; flex-wrap: wrap; gap: 6px 18px; font: 11px var(--mono); }
+@media (max-width: 600px) {
+  .circuit-scroll { max-height: 460px; }
+  .circuit-export { margin-left: 0; }
+  .circuit-toolbar label { width: 100%; }
+  .circuit-toolbar select { flex: 1; }
+}

@@ -96,6 +96,10 @@ You can press buttons, flip switches and change sensor inputs while the firmware
 
 The camera panel feeds your webcam or a test pattern into an emulated OV2640. The speaker panel plays I2S audio from a MAX98357A through the browser.
 
+The **Circuit wiring** diagram draws the GPIO connections and shared I2C buses declared in `espemu.json`. **Trace signal** selects a net and shows its endpoints. Click a device name to inspect it. Zoom and scroll to view larger circuits. Open the wiring reference for device labels, addresses, polarity and signal mappings.
+
+**KiCad netlist** downloads `espemu.net`. Open **File > Import > Netlist** in KiCad's PCB Editor to import it. The export uses generic connectors for the declared signals. J1 represents the ESP32 GPIO interface. J2 onward represent devices. The wiring reference lists each connector's logical terminal numbers. Map these terminals to physical pads and assign footprints yourself. Add power, ground, pull-ups, LED resistors and other required components before making hardware. Check the electrical design against the device datasheets. An editable KiCad schematic requires separate work. Use the existing JSON export to save an ESPEmu project.
+
 ## Test a project
 
 Put Node tests in the project's `test/` folder and run `make test`. The command builds the firmware and starts a separate workbench for each test. Tests address devices by id:
