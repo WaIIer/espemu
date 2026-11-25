@@ -12,6 +12,7 @@ import { controls, isCamera, isSensor, isSpeaker, normalizeInputs, wiredPins, ty
 import { CameraPanel } from './CameraPanel';
 import { LcdPanel } from './LcdPanel';
 import { SpeakerPanel } from './SpeakerPanel';
+import { CircuitViewer } from './CircuitViewer';
 import type { ProjectState } from '../../shared/runtime';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles.css';
@@ -21,15 +22,6 @@ import './project.css';
 const Gyroscope = lazy(() => import('./Gyroscope').then(module => ({ default: module.Gyroscope })));
 const ProjectCreator = lazy(() => import('./ProjectCreator').then(module => ({ default: module.ProjectCreator })));
 
-function bitmap(devices: CircuitDevice[], compact: boolean) {
-  const columns=compact?1:4;
-  const canvas=document.createElement('canvas');canvas.width=compact?360:1000;canvas.height=110+Math.ceil(devices.length/columns)*64;
-  const context=canvas.getContext('2d')!;context.fillStyle='#f4f8f6';context.fillRect(0,0,canvas.width,canvas.height);
-  context.fillStyle='#243a31';context.fillRect(20,20,180,64);context.font='bold 24px monospace';context.fillStyle='#ffffff';context.fillText('ESP32',55,59);
-  context.strokeStyle='#73a391';context.lineWidth=2;context.beginPath();context.moveTo(200,53);context.lineTo(canvas.width-20,53);context.stroke();
-  devices.forEach((device,index)=>{const x=20+(index%columns)*245,y=105+Math.floor(index/columns)*64;context.strokeStyle='#b2c4ba';context.strokeRect(x,y-9,compact?320:230,52);context.fillStyle='#273a30';context.font=`${compact?16:13}px monospace`;context.fillText(`${device.id.slice(0,14)} / ${device.type}`,x+8,y+9);context.fillStyle='#507665';context.font=`${compact?14:11}px monospace`;context.fillText(isSensor(device)?`${device.bus} : 0x${device.address.toString(16)}`:isCamera(device)?`SCCB ${device.signals.sda}/${device.signals.scl} · VSYNC ${device.signals.vsync} · DVP`:`GPIO ${wiredPins(device).join(', ')}`,x+8,y+29);});
-  return canvas.toDataURL('image/png');
-}
 function InputNumber({value,disabled,minimum,maximum,step,label,commit,automated=false}:{value:number;disabled:boolean;minimum:number;maximum:number;step:number;label:string;commit:(value:number)=>Promise<void>;automated?:boolean}) {
   const [draft,setDraft]=useState<string|null>(null),[pending,setPending]=useState(false),[error,setError]=useState('');
   const origin=useRef<number|null>(null);
@@ -69,7 +61,7 @@ function EventTimeline({events,sessionId}:{events:ProjectState['events'];session
 function App() {
   const session=useProjectSession();const {state,connection}=session;
   const {theme,setTheme}=useTheme();
-  const [image,setImage]=useState(''),[selected,setSelected]=useState('');
+  const [selected,setSelected]=useState('');
   const [scenarioDraft,setScenario]=useState<CircuitScenario>({deviceId:'',channel:'',kind:'manual',offset:0,amplitude:0,periodMs:10000,seed:42,frames:[]});
   const [frames,setFrames]=useState('[]');
   const [deviceSearch,setDeviceSearch]=useState(''),[inspector,setInspector]=useState('');
@@ -87,8 +79,6 @@ function App() {
   const inspected=matching.some(device=>device.id===inspector)?matching.filter(device=>device.id===inspector):matching;
   const visibleDevices=new Set(inspected.map(device=>device.id));
   const sensors=inspected.filter(isSensor);
-  const key=JSON.stringify(devices);
-  useEffect(()=>{const media=matchMedia('(max-width:600px)');const render=()=>setImage(bitmap(devices,media.matches));render();media.addEventListener('change',render);return()=>media.removeEventListener('change',render);},[key]);
   const disabled=connection!=='online'||!state||state.phase==='error'||state.phase==='starting';
   const scope=`${connection}:${state?.sessionId}:${state?.epoch}`;
   const freshness=connection!=='online'?'Stale':state?.phase==='stopped'?'Staged':state?.phase==='paused'?'Paused':state?.phase==='running'?'Live':'Unavailable';
@@ -145,8 +135,8 @@ function App() {
     <label className="console-dock-control"><Terminal size={15} aria-hidden="true"/> Console dock <select value={dock} onChange={event=>setDock(event.target.value as ConsoleDock)}>{consoleDocks.map((value,index)=><option key={value} value={value}>{['Off','Serial','Events','Serial and events'][index]}</option>)}</select></label>
   </div><div className={`workbench-layout${dockSerial||dockEvents?' workbench-layout-docked':''}`}><div className="workbench-primary"><Tabs activeKey={activeTab} onSelect={tab=>{if(tab)setActiveTab(tab);}} id="workbench-tabs" mountOnEnter transition={false}>
     <Tab eventKey="circuit" title={<><Cpu size={16}/>Circuit</>}>
+    {state&&<CircuitViewer key={JSON.stringify([state.manifest.devices,state.manifest.buses])} manifest={state.manifest} visibleDevices={visibleDevices} inspect={setInspector}/>}
     <Suspense fallback={<p className="meta">Loading 3D view</p>}>{inspected.filter((device):device is Extract<CircuitDevice,{type:'mpu6050'}>=>device.type==='mpu6050').map(device=><Gyroscope key={`${scope}:${device.id}`} device={device} inputs={state?.inputs[device.id]??{}} model={state?.deviceStates[device.id]} disabled={disabled} epoch={state?.epoch??0} onMotion={(fields,epoch)=>session.send({action:'input-fields',deviceId:device.id,fields},epoch)}/>)}</Suspense>{inspected.filter((device):device is Extract<CircuitDevice,{type:'hd44780'}>=>device.type==='hd44780').map(device=><LcdPanel key={device.id} device={device} model={state?.deviceStates[device.id]}/>)}{inspected.filter(isSpeaker).map(device=><SpeakerPanel key={device.id} device={device} speaker={state?.speaker} subscribe={session.subscribeAudio}/>)}{inspected.filter(isCamera).map(device=><CameraPanel key={device.id} device={device} camera={state?.camera} disabled={disabled} running={state?.phase==='running'} epoch={state?.epoch??0} send={session.send}/>)}<PeripheralsPanel key={scope} state={state} disabled={disabled||state?.phase==='stopped'} disconnected={connection!=='online'} filter={visibleDevices} send={session.send} sendPin={session.send}/>
-    <section className="runtime-circuit"><div className="section-heading"><h2><Cpu size={17}/>Logical circuit</h2><span className="meta">{state?.manifest.target??'esp32'}</span></div>{image&&<img className="runtime-bitmap" src={image} alt="Declared ESP32 circuit"/>}<details><summary>Wiring reference</summary><ul>{inspected.map(device=><li key={device.id}>{device.id} / {device.type} / {isSensor(device)?`${device.bus} · 0x${device.address.toString(16)}`:`GPIO ${wiredPins(device).join(', ')}`}</li>)}</ul></details></section>
     </Tab><Tab eventKey="inputs" title={<><Activity size={16}/>Inputs</>}>
     <div className="runtime-grid"><aside><div className="section-heading"><h2>Physical inputs</h2><span className="meta">{freshness}</span></div>{sensors.map(device=><section className="runtime-input-device" aria-label={`${device.id} physical inputs`} key={`${scope}:${device.id}`}><h3>{device.label??device.id}<span className="address">{device.id} / {device.type} / 0x{device.address.toString(16)}</span></h3>{Object.entries(controls(device.type)).map(([name,control])=><label className="runtime-input" key={name}>{control.label}<span className="unit">{control.unit}</span><InputNumber label={`${device.id} ${name} input`} minimum={control.minimum} maximum={control.maximum} step={control.step} value={Number(state?.inputs[device.id]?.[name]??control.initial)} automated={!!state?.scenarios.some(scenario=>scenario.deviceId===device.id&&scenario.channel===name&&scenario.kind!=='manual'&&(state.scenarioRuns?.[`${device.id}:${name}`]?.status??'active')==='active')} disabled={disabled} commit={value=>input(device,name,value)}/></label>)}<div className="fault-row"><label><InputFlag label={`${device.id} connected`} value={!!state?.inputs[device.id]?.connected} disabled={disabled} commit={value=>input(device,'connected',value)}/>Connected</label>{Object.keys(controls(device.type)).length>0&&<label><InputFlag label={`${device.id} invalid`} value={!!state?.inputs[device.id]?.invalid} disabled={disabled} commit={value=>input(device,'invalid',value)}/>Invalid</label>}</div><span className="meta">{freshness} / {state?.inputs[device.id]?.connected?'connected':'disconnected'} / {state?.inputs[device.id]?.invalid?'invalid':'valid'}</span></section>)}
     {scenarioTarget&&<section className="runtime-scenarios"><h2>Input scenario</h2>
