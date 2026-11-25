@@ -164,12 +164,14 @@ test('the creator calls out devices that KiCad export skips',async({page},info)=
   await page.getByLabel('Device type').selectOption('led');
   await expect(note).toHaveCount(0);
   await page.getByLabel('GPIO pin').selectOption('2');
+  await page.getByLabel('Active low',{exact:true}).uncheck();
   await page.getByRole('button',{name:'Add device',exact:true}).click();
-  await page.getByLabel('GPIO pin').selectOption('25');
+  await page.getByLabel('Device type').selectOption('button');
+  await page.getByLabel('GPIO pin').selectOption('0');
   await page.getByRole('button',{name:'Add device',exact:true}).click();
   const rows=page.locator('.creator-device');
-  await expect(rows.nth(0).locator('.kicad-note')).toHaveText('KiCad export skips this device. GPIO2 is an ESP32 boot pin, and a device on it can stop the board from booting. Choose another pin to export this device.');
-  await expect(rows.nth(1).locator('.kicad-note')).toHaveCount(0);
+  await expect(rows.nth(0).locator('.kicad-note')).toHaveCount(0);
+  await expect(rows.nth(1).locator('.kicad-note')).toHaveText('KiCad export skips this device. GPIO0 is an ESP32 boot pin, and a device on it can stop the board from booting. Choose another pin to export this device.');
   await page.getByLabel('Device type').selectOption('ws2812b');
   for(const width of [1440,375]){
     await page.setViewportSize({width,height:900});

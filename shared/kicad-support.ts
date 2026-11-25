@@ -51,7 +51,9 @@ export function kicadOmission(device: CircuitDevice): string | undefined {
     const missing = pins.find(pin => pin === 37 || pin === 38);
     if (missing !== undefined) return `GPIO${missing} is not available on the ESP32-WROOM-32 module.`;
     const boot = pins.find(pin => KICAD_BOOT_PINS.includes(pin));
-    if (boot !== undefined) return `GPIO${boot} is an ESP32 boot pin, and a device on it can stop the board from booting. Choose another pin to export this device.`;
+    // DevKit boards drive their onboard LED from GPIO2 to ground, which holds GPIO2 low at boot as download mode needs.
+    const devkitLed = device.type === 'led' && device.pin === 2 && !device.activeLow;
+    if (boot !== undefined && !devkitLed) return `GPIO${boot} is an ESP32 boot pin, and a device on it can stop the board from booting. Choose another pin to export this device.`;
     if ((device.type === 'button' || device.type === 'switch') && device.pin === 1) return 'A contact on GPIO1 can short the boot UART transmitter. Choose another pin to export this device.';
   }
   return undefined;

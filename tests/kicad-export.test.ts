@@ -117,12 +117,18 @@ test('the creator and exporter share one set of KiCad limitations', () => {
   const device = (value: object) => manifest([value]).devices[0];
   assert.match(kicadTypeLimitation('tmp105') ?? '', /TMP105/);
   assert.equal(kicadTypeLimitation('led'), undefined);
-  assert.match(kicadOmission(device({ id: 'status', type: 'led', pin: 2 })) ?? '', /GPIO2 is an ESP32 boot pin/);
+  assert.match(kicadOmission(device({ id: 'status', type: 'led', pin: 2, activeLow: true })) ?? '', /GPIO2 is an ESP32 boot pin/);
+  assert.equal(kicadOmission(device({ id: 'builtin', type: 'led', pin: 2, activeLow: false })), undefined);
+  assert.match(kicadOmission(device({ id: 'boot', type: 'button', pin: 0 })) ?? '', /GPIO0 is an ESP32 boot pin/);
   assert.match(kicadOmission(device({ id: 'high', type: 'button', pin: 37 })) ?? '', /GPIO37 is not available/);
   assert.equal(kicadOmission(device({ id: 'status', type: 'led', pin: 25 })), undefined);
   assert.equal(kicadOmission(device({ id: 'hall', type: 'a3144', pin: 25 })), undefined);
-  const files = kicadProjectFiles(manifest([{ id: 'status', type: 'led', pin: 2 }]));
-  assert.equal(JSON.parse(files['kicad/export-report.json']).devices[0].reason, kicadOmission(device({ id: 'status', type: 'led', pin: 2 })));
+  const report = (value: object) => JSON.parse(kicadProjectFiles(manifest([value]))['kicad/export-report.json']);
+  assert.equal(report({ id: 'status', type: 'led', pin: 2, activeLow: true }).devices[0].reason, kicadOmission(device({ id: 'status', type: 'led', pin: 2, activeLow: true })));
+  const builtin = report({ id: 'builtin', type: 'led', pin: 2, activeLow: false });
+  assert.equal(builtin.devices[0].status, 'included');
+  const led = builtin.components.find((component: { instance: string; symbol: string }) => component.instance === 'builtin' && component.symbol === 'Device:LED');
+  assert.equal(led.nets['1'], 'GND');
 });
 
 test('all address alternatives and maximum device hierarchy remain deterministic and correctly strapped', () => {

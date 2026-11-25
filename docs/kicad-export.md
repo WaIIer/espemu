@@ -53,7 +53,9 @@ inactive-state bias, including on GPIO34-39. Probes are passive test points.
 Generic LED/switch/test-point footprints are deliberately left unassigned.
 
 Peripherals on boot-strapping GPIO0/2/5/12/15 are omitted until their power-on
-loading has been qualified. GPIO37/38 are not exposed on WROOM-32. GPIO1/3 users
+loading has been qualified. The exception is an active-high LED on GPIO2. It is
+the ESP32 DevKit onboard LED circuit, which holds GPIO2 low at boot as serial
+download mode requires. GPIO37/38 are not exposed on WROOM-32. GPIO1/3 users
 must disconnect UART programmer drives during peripheral operation.
 Contacts on GPIO1 are omitted because the ESP32's own boot UART transmitter
 can otherwise be shorted to a rail, even with no programmer attached.
